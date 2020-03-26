@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.Sendbutton = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,17 +45,21 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.Filebutton = new System.Windows.Forms.Button();
+            this.Deletebutton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // Sendbutton
             // 
-            this.button1.Location = new System.Drawing.Point(588, 468);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "发送";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Sendbutton.Location = new System.Drawing.Point(588, 468);
+            this.Sendbutton.Name = "Sendbutton";
+            this.Sendbutton.Size = new System.Drawing.Size(75, 23);
+            this.Sendbutton.TabIndex = 0;
+            this.Sendbutton.Text = "发送";
+            this.Sendbutton.UseVisualStyleBackColor = true;
+            this.Sendbutton.Click += new System.EventHandler(this.Sendbutton_Click);
             // 
             // textBox1
             // 
@@ -134,7 +138,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(219, 72);
+            this.label6.Location = new System.Drawing.Point(420, 24);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(37, 15);
             this.label6.TabIndex = 10;
@@ -143,7 +147,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(219, 136);
+            this.label7.Location = new System.Drawing.Point(216, 61);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(37, 15);
             this.label7.TabIndex = 11;
@@ -152,7 +156,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(216, 237);
+            this.label8.Location = new System.Drawing.Point(216, 115);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 15);
             this.label8.TabIndex = 12;
@@ -160,33 +164,71 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(299, 21);
+            this.textBox5.Location = new System.Drawing.Point(281, 21);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 25);
             this.textBox5.TabIndex = 13;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(281, 72);
+            this.textBox6.Location = new System.Drawing.Point(505, 21);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 25);
             this.textBox6.TabIndex = 14;
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(281, 136);
+            this.textBox7.Location = new System.Drawing.Point(281, 61);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(100, 25);
             this.textBox7.TabIndex = 15;
             // 
             // textBox8
             // 
-            this.textBox8.Location = new System.Drawing.Point(260, 237);
+            this.textBox8.Location = new System.Drawing.Point(281, 115);
             this.textBox8.Multiline = true;
             this.textBox8.Name = "textBox8";
             this.textBox8.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox8.Size = new System.Drawing.Size(508, 190);
+            this.textBox8.Size = new System.Drawing.Size(508, 119);
             this.textBox8.TabIndex = 16;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(216, 269);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(129, 15);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "与SMTP服务器交互";
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(281, 302);
+            this.textBox9.Multiline = true;
+            this.textBox9.Name = "textBox9";
+            this.textBox9.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox9.Size = new System.Drawing.Size(508, 119);
+            this.textBox9.TabIndex = 18;
+            // 
+            // Filebutton
+            // 
+            this.Filebutton.Location = new System.Drawing.Point(405, 62);
+            this.Filebutton.Name = "Filebutton";
+            this.Filebutton.Size = new System.Drawing.Size(75, 23);
+            this.Filebutton.TabIndex = 19;
+            this.Filebutton.Text = "浏览";
+            this.Filebutton.UseVisualStyleBackColor = true;
+            this.Filebutton.Click += new System.EventHandler(this.Filebutton_Click);
+            // 
+            // Deletebutton
+            // 
+            this.Deletebutton.Location = new System.Drawing.Point(505, 62);
+            this.Deletebutton.Name = "Deletebutton";
+            this.Deletebutton.Size = new System.Drawing.Size(75, 23);
+            this.Deletebutton.TabIndex = 20;
+            this.Deletebutton.Text = "删除";
+            this.Deletebutton.UseVisualStyleBackColor = true;
+            this.Deletebutton.Click += new System.EventHandler(this.Deletebutton_Click);
             // 
             // Send
             // 
@@ -194,6 +236,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Menu;
             this.ClientSize = new System.Drawing.Size(850, 625);
+            this.Controls.Add(this.Deletebutton);
+            this.Controls.Add(this.Filebutton);
+            this.Controls.Add(this.textBox9);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox6);
@@ -210,7 +256,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Sendbutton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Send";
             this.Text = "Send";
@@ -221,7 +267,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Sendbutton;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -238,5 +284,9 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.Button Filebutton;
+        private System.Windows.Forms.Button Deletebutton;
     }
 }

@@ -98,10 +98,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dll\Dll.vcxproj">
-      <Project>{a2d6d18c-e354-4a98-bf59-94e0577fa6e0}</Project>
-      <Name>Dll</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
