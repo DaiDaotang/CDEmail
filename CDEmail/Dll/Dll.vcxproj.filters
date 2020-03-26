@@ -21,12 +21,30 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Sock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendMail.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiveMail.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendMail.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiveMail.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
