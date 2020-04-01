@@ -31,19 +31,19 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.tPop3Server = new System.Windows.Forms.TextBox();
+            this.tUsername = new System.Windows.Forms.TextBox();
+            this.tPassword = new System.Windows.Forms.TextBox();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.btnDisconnect = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnReadMail = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnRcvClousure = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -73,45 +73,50 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "密码";
             // 
-            // textBox1
+            // tPop3Server
             // 
-            this.textBox1.Location = new System.Drawing.Point(55, 71);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 25);
-            this.textBox1.TabIndex = 3;
+            this.tPop3Server.Location = new System.Drawing.Point(55, 71);
+            this.tPop3Server.Name = "tPop3Server";
+            this.tPop3Server.Size = new System.Drawing.Size(100, 25);
+            this.tPop3Server.TabIndex = 3;
+            this.tPop3Server.Text = "pop.126.com";
             // 
-            // textBox2
+            // tUsername
             // 
-            this.textBox2.Location = new System.Drawing.Point(55, 139);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 25);
-            this.textBox2.TabIndex = 4;
+            this.tUsername.Location = new System.Drawing.Point(55, 139);
+            this.tUsername.Name = "tUsername";
+            this.tUsername.Size = new System.Drawing.Size(100, 25);
+            this.tUsername.TabIndex = 4;
+            this.tUsername.Text = "whitecoffeesama@126.com";
             // 
-            // textBox3
+            // tPassword
             // 
-            this.textBox3.Location = new System.Drawing.Point(55, 225);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 25);
-            this.textBox3.TabIndex = 5;
-            this.textBox3.UseSystemPasswordChar = true;
+            this.tPassword.Location = new System.Drawing.Point(55, 225);
+            this.tPassword.Name = "tPassword";
+            this.tPassword.Size = new System.Drawing.Size(100, 25);
+            this.tPassword.TabIndex = 5;
+            this.tPassword.Text = "19990202hlx";
+            this.tPassword.UseSystemPasswordChar = true;
             // 
-            // button1
+            // btnConnect
             // 
-            this.button1.Location = new System.Drawing.Point(55, 321);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "连接";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnConnect.Location = new System.Drawing.Point(55, 321);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.TabIndex = 6;
+            this.btnConnect.Text = "连接";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // button2
+            // btnDisconnect
             // 
-            this.button2.Location = new System.Drawing.Point(55, 411);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "断开";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Location = new System.Drawing.Point(55, 411);
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(75, 23);
+            this.btnDisconnect.TabIndex = 7;
+            this.btnDisconnect.Text = "断开";
+            this.btnDisconnect.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
             // textBox4
             // 
@@ -130,14 +135,15 @@
             this.comboBox1.Size = new System.Drawing.Size(387, 23);
             this.comboBox1.TabIndex = 9;
             // 
-            // button3
+            // btnReadMail
             // 
-            this.button3.Location = new System.Drawing.Point(615, 40);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(110, 32);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "查看邮件";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnReadMail.Location = new System.Drawing.Point(615, 40);
+            this.btnReadMail.Name = "btnReadMail";
+            this.btnReadMail.Size = new System.Drawing.Size(110, 32);
+            this.btnReadMail.TabIndex = 10;
+            this.btnReadMail.Text = "查看邮件";
+            this.btnReadMail.UseVisualStyleBackColor = true;
+            this.btnReadMail.Click += new System.EventHandler(this.btnReadMail_Click);
             // 
             // label4
             // 
@@ -173,14 +179,15 @@
             this.textBox6.Size = new System.Drawing.Size(100, 25);
             this.textBox6.TabIndex = 14;
             // 
-            // button4
+            // btnRcvClousure
             // 
-            this.button4.Location = new System.Drawing.Point(490, 108);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(143, 60);
-            this.button4.TabIndex = 15;
-            this.button4.Text = "附件接收";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnRcvClousure.Location = new System.Drawing.Point(490, 108);
+            this.btnRcvClousure.Name = "btnRcvClousure";
+            this.btnRcvClousure.Size = new System.Drawing.Size(143, 60);
+            this.btnRcvClousure.TabIndex = 15;
+            this.btnRcvClousure.Text = "附件接收";
+            this.btnRcvClousure.UseVisualStyleBackColor = true;
+            this.btnRcvClousure.Click += new System.EventHandler(this.btnRcvClousure_Click);
             // 
             // Receive
             // 
@@ -188,19 +195,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(850, 625);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btnRcvClousure);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btnReadMail);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btnDisconnect);
+            this.Controls.Add(this.btnConnect);
+            this.Controls.Add(this.tPassword);
+            this.Controls.Add(this.tUsername);
+            this.Controls.Add(this.tPop3Server);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -217,18 +224,18 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox tPop3Server;
+        private System.Windows.Forms.TextBox tUsername;
+        private System.Windows.Forms.TextBox tPassword;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnReadMail;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnRcvClousure;
     }
 }

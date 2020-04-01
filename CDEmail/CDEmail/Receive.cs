@@ -44,5 +44,27 @@ namespace CDEmail
                 return cp;
             }
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            // 连接调用了查看信息数量的函数
+            ReceiveMail receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
+            MessageBox.Show(receiveMail.GetNumberOfNewMessages().ToString());
+        }
+
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnReadMail_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRcvClousure_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
