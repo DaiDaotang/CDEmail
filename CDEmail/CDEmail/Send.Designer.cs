@@ -131,9 +131,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(216, 24);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.Size = new System.Drawing.Size(82, 15);
             this.label5.TabIndex = 9;
-            this.label5.Text = "收信人";
+            this.label5.Text = "收信人邮箱";
             // 
             // label6
             // 
@@ -147,7 +147,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(216, 61);
+            this.label7.Location = new System.Drawing.Point(216, 66);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(37, 15);
             this.label7.TabIndex = 11;
@@ -164,14 +164,14 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(281, 21);
+            this.textBox5.Location = new System.Drawing.Point(304, 21);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 25);
             this.textBox5.TabIndex = 13;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(505, 21);
+            this.textBox6.Location = new System.Drawing.Point(463, 21);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 25);
             this.textBox6.TabIndex = 14;
