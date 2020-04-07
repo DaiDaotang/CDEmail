@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using System.Collections;
+using System.Net.Mail;
 
 namespace CDEmail
 {
@@ -47,9 +50,27 @@ namespace CDEmail
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            // 连接调用了查看信息数量的函数
+            Thread thread = new Thread(new ThreadStart(connectToServer));
+            thread.IsBackground = true;
+            thread.Start();
+
+        }
+
+        private void connectToServer()
+        {
+            // 创建对象
             ReceiveMail receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
-            MessageBox.Show(receiveMail.GetNumberOfNewMessages().ToString());
+
+            receiveMail.ShowNMail(1);
+            receiveMail.ShowNMailInfo(1);
+
+
+            // 将信息标题列表收入列表中
+            //ArrayList msglist = receiveMail.GetNewMailInfo();
+            //for (int i = 0; i < msglist.Count; i++)
+            //{
+            //    Console.WriteLine("Mail " + i + "\r\n" + ((NewMailInfo)msglist[i]).ToString());
+            //}
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)

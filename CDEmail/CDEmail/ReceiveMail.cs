@@ -99,7 +99,7 @@ namespace CDEmail
 
 
         //登陆服务器
-        private void Connect()
+        private TcpClient Connect()
         {
             TcpClient sender = new TcpClient(POPServer, 110);
             Byte[] outbytes;
@@ -128,17 +128,17 @@ namespace CDEmail
 
                 Console.WriteLine(str);
 
-                //Console.WriteLine(sr.ReadLine() );
-
+                return sender;
             }
             catch
             {
                 System.Windows.Forms.MessageBox.Show("用户名或密码错误");
+                return null;
             }
         }
 
 
-        //为了读到数据流中的正确信息，重新建的一个方法（只是在读邮件详细信息是用到《即GetNewMessages（）方法中用到，这样就可以正常显示邮件正文的中英文》）
+        //为了读到数据流中的正确信息，重新建的一个方法（只是在读邮件详细信息是用到，即GetNewMessages()方法中用到，这样就可以正常显示邮件正文的中英文）
         private void Connecttest(TcpClient tcpc)
         {
             Byte[] outbytes;
@@ -151,13 +151,13 @@ namespace CDEmail
                 sr = new StreamReader(ns);
                 sr.ReadLine();
                 //Console.WriteLine(sr.ReadLine() );
-                input = "user " + user + "rn";
+                input = "user " + user + "\r\n";
                 outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                 ns.Write(outbytes, 0, outbytes.Length);
 
                 readuser = sr.ReadLine();
 
-                input = "pass " + pwd + "rn";
+                input = "pass " + pwd + "\r\n";
                 outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                 ns.Write(outbytes, 0, outbytes.Length);
                 readpwd = sr.ReadLine();
@@ -201,15 +201,16 @@ namespace CDEmail
                 outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                 ns.Write(outbytes, 0, outbytes.Length);
                 string thisResponse = sr.ReadLine();
+                //断开与服务器的连接
+                Disconnect();
+
                 if (thisResponse.Substring(0, 4) == "-ERR")
                 {
                     return -1;
                 }
                 string[] tmpArray;
-                //将从服务器取到的数据以“”分成字符数组
+                //将从服务器取到的数据以' '分成字符数组
                 tmpArray = thisResponse.Split(' ');
-                //断开与服务器的连接
-                Disconnect();
                 //取到的表示邮件数目
                 countmail = Convert.ToInt32(tmpArray[1]);
                 count = countmail;
@@ -218,7 +219,7 @@ namespace CDEmail
             catch
             {
                 System.Windows.Forms.MessageBox.Show("Could not connect to mail server");
-                return -1;//表示读邮件时 出错，将接收邮件的线程 阻塞5分钟
+                return -1;//表示读邮件时 出错
             }
         }
         #endregion
@@ -234,92 +235,102 @@ namespace CDEmail
         {
 
             bool blag = false;
-            int newcount = GetNumberOfNewMessages();
             ArrayList newmsgs = new ArrayList();
             try
             {
-                TcpClient tcpc = new TcpClient(POPServer, 110);
-                Connecttest(tcpc);
-                //    newcount = GetNumberOfNewMessages();
+                int newcount = GetNumberOfNewMessages();    // 邮件数量
+
+                TcpClient tcpc = Connect(); // 连接 TCP
 
                 for (int n = 1; n < newcount + 1; n++)
                 {
+                    // 输出序号
+                    Console.WriteLine("\t\t-------------------------------------------------" + n);
+
                     ArrayList msglines = GetRawMessage(tcpc, n);
-                    string msgsubj = GetMessageSubject(msglines).Trim();
                     MailMessage msg = new MailMessage();
-                    //首先判断Substring是什么编码（"=?gb2312?B?"或者"=?gb2312?Q?"），然后转到相应的解码方法，实现解码
-                    //如果是"=?gb2312?B?"，转到DecodeBase64（）进行解码
-                    if (msgsubj.Length > 11)
-                    {
-                        //base64编码
-                        if (msgsubj.Substring(0, 11) == "=?gb2312?B?")
-                        {
-                            blag = true;
-                            msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
-                            msg.Subject = DecodeBase64(msgsubj);
-                        }
-                        //如果是"=?gb2312?Q?"编码，先得取到被编码的部分，字符如果没编码就不转到解码方法
-                        if (msgsubj.Length > 11)
-                        {
 
-                            if (msgsubj.Substring(0, 11) == "=?gb2312?Q?")
-                            {
-                                blag = true;
-                                msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
-                                string text = msgsubj;
-                                string str = string.Empty;
-                                string decodeq = string.Empty;
-                                while (text.Length > 0)
-                                {
-                                    //判断编码部分是否开始
-                                    if (text.Substring(0, 1) == "=")
-                                    {
-                                        decodeq = text.Substring(0, 3);
-                                        text = text.Substring(3, text.Length - 3);
-                                        //当出现编码部分时，则取出连续的编码部分
-                                        while (text.Length > 0)
-                                        {
-                                            if (text.Substring(0, 1) == "=")
-                                            {
-                                                decodeq += text.Substring(0, 3);
-                                                text = text.Substring(3, text.Length - 3);
-                                            }
-                                            else
-                                            {
-                                                break;
-                                            }
-                                        }
-                                        //将连续的编码进行解码
-                                        str += DecodeQ(decodeq);
-                                    }
-                                    //如果该字节没编码，则不用处理
-                                    else
-                                    {
-                                        str += text.Substring(0, 1);
-                                        text = text.Substring(1, text.Length - 1);
-                                    }
+                    string msgsubj = GetMessageSubject(msglines).Trim();
+                    #region
+                    ////首先判断Substring是什么编码（"=?gb2312?B?"或者"=?gb2312?Q?"），然后转到相应的解码方法，实现解码
+                    ////如果是"=?gb2312?B?"，转到DecodeBase64（）进行解码
+                    //if (msgsubj.Length > 11)
+                    //{
+                    //    //base64编码
+                    //    if (msgsubj.Substring(0, 11) == "=?gb2312?B?")
+                    //    {
+                    //        blag = true;
+                    //        msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
+                    //        msg.Subject = DecodeBase64(msgsubj);
+                    //    }
+                    //    //如果是"=?gb2312?Q?"编码，先得取到被编码的部分，字符如果没编码就不转到解码方法
+                    //    if (msgsubj.Length > 11)
+                    //    {
 
-                                }
-                                //用空格代替subject中的“0”,以便能取道全部的内容
-                                msg.Subject = str.Replace("0", " ");
-                            }
-                        }
-                        if (blag == false)
-                        {
-                            msg.Subject = msgsubj.Replace("0", " ");
-                        }
+                    //        if (msgsubj.Substring(0, 11) == "=?gb2312?Q?")
+                    //        {
+                    //            blag = true;
+                    //            msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
+                    //            string text = msgsubj;
+                    //            string str = string.Empty;
+                    //            string decodeq = string.Empty;
+                    //            while (text.Length > 0)
+                    //            {
+                    //                //判断编码部分是否开始
+                    //                if (text.Substring(0, 1) == "=")
+                    //                {
+                    //                    decodeq = text.Substring(0, 3);
+                    //                    text = text.Substring(3, text.Length - 3);
+                    //                    //当出现编码部分时，则取出连续的编码部分
+                    //                    while (text.Length > 0)
+                    //                    {
+                    //                        if (text.Substring(0, 1) == "=")
+                    //                        {
+                    //                            decodeq += text.Substring(0, 3);
+                    //                            text = text.Substring(3, text.Length - 3);
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            break;
+                    //                        }
+                    //                    }
+                    //                    //将连续的编码进行解码
+                    //                    str += DecodeQ(decodeq);
+                    //                }
+                    //                //如果该字节没编码，则不用处理
+                    //                else
+                    //                {
+                    //                    str += text.Substring(0, 1);
+                    //                    text = text.Substring(1, text.Length - 1);
+                    //                }
+
+                    //            }
+                    //            //用空格代替subject中的“0”,以便能取道全部的内容
+                    //            msg.Subject = str.Replace("0", " ");
+                    //        }
+                    //    }
+                    //    if (blag == false)
+                    //    {
+                    //        msg.Subject = msgsubj.Replace("0", " ");
+                    //    }
 
 
-                    }
-                    else
-                    {
-                        msg.Subject = msgsubj.Replace("0", " ");
-                    }
-                    blag = false;
+                    //}
+                    //else
+                    //{
+                    //    msg.Subject = msgsubj.Replace("0", " ");
+                    //}
+                    //blag = false;
+                    #endregion
+
+                    //取邮件主题
+                    msg.Subject = msgsubj;
+
                     //取发邮件者的邮件地址
                     msg.From = new MailAddress(GetMessageFrom(msglines));
                     //取邮件正文
                     string msgbody = GetMessageBody(msglines);
+                    Console.WriteLine("0" + msgbody + "1");
                     msg.Body = msgbody;
                     newmsgs.Add(msg);
 
@@ -347,19 +358,26 @@ namespace CDEmail
             Byte[] outbytes;
             string input;
             string line = "";
-            input = "retr " + messagenumber.ToString() + "rn";
+            input = "retr " + messagenumber.ToString() + "\r\n";
             outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
             ns.Write(outbytes, 0, outbytes.Length);
+            sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
             ArrayList msglines = new ArrayList();
-            StreamReader srtext;
-            srtext = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
             //每份邮件以英文“.”结束
-            do
+            while((line = sr.ReadLine()) != ".")
             {
-                line = srtext.ReadLine();
+
+                Console.WriteLine(line);
+
                 msglines.Add(line);
-            } while (line != ".");
-            msglines.RemoveAt(msglines.Count - 1);
+            }
+
+            //do
+            //{
+            //    line = sr.ReadLine();
+            //    msglines.Add(line);
+            //} while (line != ".");
+            //msglines.RemoveAt(msglines.Count - 1);
             return msglines;
         }
 
@@ -371,12 +389,12 @@ namespace CDEmail
             while (msgenum.MoveNext())
             {
                 string line = (string)msgenum.Current;
-                if (line.StartsWith("Subject:"))
+                if (line.StartsWith("subject:"))
                 {
                     return line.Substring(8, line.Length - 8);
                 }
             }
-            return "None";
+            return null;
         }
 
 
@@ -394,7 +412,7 @@ namespace CDEmail
                     return tokens[1].Trim(new Char[] { '<', '>', ' ' });
                 }
             }
-            return "None";
+            return null;
         }
 
 
@@ -411,7 +429,7 @@ namespace CDEmail
             }
             while (msgenum.MoveNext())
             {
-                body = body + (string)msgenum.Current + "rn";
+                body = body + (string)msgenum.Current + "\r\n";
             }
             return body;
         }
@@ -434,7 +452,7 @@ namespace CDEmail
 
             try
             {
-                input = "dele " + messagenumber.ToString() + "rn";
+                input = "dele " + messagenumber.ToString() + "\r\n";
                 outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                 ns.Write(outbytes, 0, outbytes.Length);
                 ns.Read(backmsg, 0, 25);
@@ -454,5 +472,132 @@ namespace CDEmail
         #endregion
 
 
+
+        public ArrayList GetNewMailInfo()
+        {
+            ArrayList res = new ArrayList();
+
+            try
+            {
+                int newcount = GetNumberOfNewMessages();    // 邮件数量
+                TcpClient tcpc = Connect(); // 连接 TCP
+
+                ArrayList msglines = new ArrayList();
+                NewMailInfo mailinfo;
+
+                Byte[] outbytes;
+                string input;
+                string line = "";
+
+                for (int n = newcount; n > 0; n--)
+                {
+                    input = "top " + n.ToString() + " 10\r\n";
+                    outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                    ns.Write(outbytes, 0, outbytes.Length);
+                    sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
+
+                    mailinfo = new NewMailInfo();
+
+                    Console.WriteLine("---------------------------------------------------" + n);
+                    while ((line = sr.ReadLine()) != ".")
+                    {
+                        Console.WriteLine(line);
+                        if (line.StartsWith("from"))
+                        {
+                            mailinfo.From = new MailAddress(line.Substring(5));
+                        }
+                        else if (line.StartsWith("to"))
+                        {
+                            mailinfo.To = new MailAddress(line.Substring(3));
+                        }
+                        else if (line.StartsWith("subject"))
+                        {
+                            mailinfo.Subject = line.Substring(8);
+                        }
+                        else if (line.StartsWith("Date"))
+                        {
+                            int end = line.IndexOf("+0800");
+                            mailinfo.Date = Convert.ToDateTime(line.Substring(5, end - 5).Trim());
+                            break;
+                        }
+                    }
+
+                    Console.WriteLine("---------------------------------------------------");
+                    //Console.WriteLine(mailinfo);
+
+                    res.Add(mailinfo);
+                }
+
+                return res;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return null;
+            }
+        }
+
+        public void Test()
+        {
+            
+        }
+
+        public void ShowNMail(int n)
+        {
+            try
+            {
+                TcpClient tcpc = Connect(); // 连接 TCP
+
+                Byte[] outbytes;
+                string input;
+                string line = "";
+
+                input = "top " + n.ToString() + " 10\r\n";
+                outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                ns.Write(outbytes, 0, outbytes.Length);
+                sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
+
+                Console.WriteLine("---------------------------------------------------");
+                while ((line = sr.ReadLine()) != ".")
+                {
+                    Console.WriteLine(line);
+                }
+
+                Console.WriteLine("---------------------------------------------------");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        public void ShowNMailInfo(int n)
+        {
+            try
+            {
+                TcpClient tcpc = Connect(); // 连接 TCP
+
+                Byte[] outbytes;
+                string input;
+                string line = "";
+
+                input = "retr " + n.ToString() + "\r\n";
+                outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                ns.Write(outbytes, 0, outbytes.Length);
+                sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
+
+                Console.WriteLine("---------------------------------------------------");
+                while ((line = sr.ReadLine()) != ".")
+                {
+                    Console.WriteLine(line);
+                }
+
+                Console.WriteLine("---------------------------------------------------");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
     }
 }
