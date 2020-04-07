@@ -9,6 +9,11 @@ namespace CDEmail
 {
     class NewMailInfo
     {
+        public int Num
+        {
+            get;
+        }
+
         public MailAddress From
         {
             get;set;
@@ -26,8 +31,9 @@ namespace CDEmail
             get; set;
         }
 
-        public NewMailInfo()
+        public NewMailInfo(int n)
         {
+            Num = n;
             From = null;
             To = null;
             Subject = null;

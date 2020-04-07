@@ -472,7 +472,7 @@ namespace CDEmail
         #endregion
 
 
-
+        // 获取邮件的头部分
         public ArrayList GetNewMailInfo()
         {
             ArrayList res = new ArrayList();
@@ -489,42 +489,36 @@ namespace CDEmail
                 string input;
                 string line = "";
 
-                for (int n = newcount; n > 0; n--)
+                for (int n = newcount; n > (newcount > 30? n - 30 : 0); n--)
                 {
-                    input = "top " + n.ToString() + " 10\r\n";
+                    input = "top " + n.ToString() + " 0\r\n";
                     outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                     ns.Write(outbytes, 0, outbytes.Length);
                     sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
 
-                    mailinfo = new NewMailInfo();
+                    mailinfo = new NewMailInfo(n);
 
                     Console.WriteLine("---------------------------------------------------" + n);
                     while ((line = sr.ReadLine()) != ".")
                     {
-                        Console.WriteLine(line);
-                        if (line.StartsWith("from"))
+                        if (line.ToLower().StartsWith("from"))
                         {
                             mailinfo.From = new MailAddress(line.Substring(5));
                         }
-                        else if (line.StartsWith("to"))
+                        else if (line.ToLower().StartsWith("to"))
                         {
                             mailinfo.To = new MailAddress(line.Substring(3));
                         }
-                        else if (line.StartsWith("subject"))
+                        else if (line.ToLower().StartsWith("subject"))
                         {
                             mailinfo.Subject = line.Substring(8);
                         }
-                        else if (line.StartsWith("Date"))
+                        else if (line.ToLower().StartsWith("date"))
                         {
                             int end = line.IndexOf("+0800");
                             mailinfo.Date = Convert.ToDateTime(line.Substring(5, end - 5).Trim());
-                            break;
                         }
                     }
-
-                    Console.WriteLine("---------------------------------------------------");
-                    //Console.WriteLine(mailinfo);
-
                     res.Add(mailinfo);
                 }
 
@@ -537,12 +531,100 @@ namespace CDEmail
             }
         }
 
-        public void Test()
+        // 获取邮件
+        public MailMessage GetANewMail(NewMailInfo mailinfo)
         {
-            
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.From = mailinfo.From;
+                mail.To.Add(mailinfo.To);
+                mail.Subject = mailinfo.Subject;
+
+                TcpClient tcpc = Connect(); // 连接 TCP
+
+                Byte[] outbytes;
+                string input;
+                string line = "";
+
+                input = "retr " + mailinfo.Num.ToString() + "\r\n";
+                outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                ns.Write(outbytes, 0, outbytes.Length);
+                sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
+
+                // 寻找定义的边界
+                String boundary = null;
+                while(boundary == null)
+                {
+                    line = sr.ReadLine();
+                    if (line.StartsWith("Content-Type: multipart/"))
+                    {
+                        if (!line.Contains("boundary="))
+                        {
+                            line = sr.ReadLine();
+                        }
+                        line = line.Trim(' ');
+                        line = line.Replace("Content-Type: multipart/", "");
+                        line = line.Replace("alternative", "");
+                        line = line.Replace("mixed", "");
+                        line = line.Replace("boundary=", "");
+                        boundary = line.Trim('"', ' ', ';');
+                        break;
+                    }
+                }
+
+                // 根据边界寻找正文
+                String body = "";
+                while ((line = sr.ReadLine()) != ".")
+                {
+                    if (line.StartsWith("--"))
+                    {
+                        // 第1次边界后是正文
+                        if (line.Contains(boundary))
+                        {
+                            while (!((line = sr.ReadLine()).StartsWith("--") && line.Contains(boundary)))
+                            {
+                                body += line;
+                            }
+                            break;
+                        }
+                    }
+                }
+                mail.Body = body;
+
+                // 根据边界寻找附件
+                //while ((line = sr.ReadLine()) != ".")
+                //{
+                //    // 第2次边界后是附件
+                //    if (line.Contains(boundary))
+                //    {
+                //        Console.WriteLine("附件");
+                //        while (!(line = sr.ReadLine()).Contains(boundary))
+                //        {
+                //            Console.WriteLine(line);
+                //        }
+                //        break;
+                //    }
+                //}
+
+                return mail;
+
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return null;
+            }
         }
 
-        public void ShowNMail(int n)
+        // 测试
+        public void Test(int n)
+        {
+            ShowNMailInfo(n);
+            ShowNMail(n);
+        }
+
+        private void ShowNMailInfo(int n)
         {
             try
             {
@@ -552,7 +634,7 @@ namespace CDEmail
                 string input;
                 string line = "";
 
-                input = "top " + n.ToString() + " 10\r\n";
+                input = "top " + n.ToString() + " 0\r\n";
                 outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
                 ns.Write(outbytes, 0, outbytes.Length);
                 sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
@@ -571,7 +653,7 @@ namespace CDEmail
             }
         }
 
-        public void ShowNMailInfo(int n)
+        private void ShowNMail(int n)
         {
             try
             {
