@@ -84,7 +84,8 @@ namespace CDEmail
             }
             catch (Exception ex)
             {
-                throw ex;
+                //throw ex;
+                return false;
             }
         }
         /// <summary>
