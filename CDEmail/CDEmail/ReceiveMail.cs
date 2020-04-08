@@ -473,7 +473,7 @@ namespace CDEmail
 
 
         // 获取邮件的头部分
-        public ArrayList GetNewMailInfo()
+        public ArrayList GetNewMailInfo(int start, int end)
         {
             ArrayList res = new ArrayList();
 
@@ -515,8 +515,7 @@ namespace CDEmail
                         }
                         else if (line.ToLower().StartsWith("date"))
                         {
-                            int end = line.IndexOf("+0800");
-                            mailinfo.Date = Convert.ToDateTime(line.Substring(5, end - 5).Trim());
+                            mailinfo.Date = Convert.ToDateTime(line.Substring(5, line.IndexOf("+0800") - 5).Trim());
                         }
                     }
                     res.Add(mailinfo);

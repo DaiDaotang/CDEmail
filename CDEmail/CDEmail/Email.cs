@@ -58,6 +58,7 @@ namespace CDEmail
             receiveList = ReceiveList.GetIntance;
 
             //设置子窗体的父窗体
+            send.BaseForm = this;
             receive.BaseForm = this;
             receiveList.BaseForm = this;
 

@@ -244,6 +244,7 @@
             this.btnPrePage.TabIndex = 18;
             this.btnPrePage.Text = "上一页";
             this.btnPrePage.UseVisualStyleBackColor = true;
+            this.btnPrePage.Click += new System.EventHandler(this.btnPrePage_Click);
             // 
             // btnNextPage
             // 
@@ -254,6 +255,7 @@
             this.btnNextPage.TabIndex = 19;
             this.btnNextPage.Text = "下一页";
             this.btnNextPage.UseVisualStyleBackColor = true;
+            this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
             // 
             // ReceiveList
             // 

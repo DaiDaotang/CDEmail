@@ -33,6 +33,12 @@ namespace CDEmail
                 }
             }
         }
+
+        public Email BaseForm
+        {
+            get; set;
+        }
+
         public Send()
         {
             InitializeComponent();

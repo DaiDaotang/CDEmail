@@ -50,13 +50,32 @@ namespace CDEmail
             }
         }
 
+        // 父窗体
         public Email BaseForm
+        {
+            get;set;
+        }
+
+        // 邮件数量
+        public int MailCount
+        {
+            get;set;
+        }
+        
+        // 当前正在浏览的页数
+        public int Page
         {
             get;set;
         }
 
         // 连接按钮
         private void button1_Click(object sender, EventArgs e)
+        {
+            Connect();
+        }
+
+        // 连接客服端，获取邮件头部
+        private void Connect()
         {
             Thread thread = new Thread(new ThreadStart(connectToServer));
             thread.IsBackground = true;
@@ -69,7 +88,10 @@ namespace CDEmail
             // 创建对象
             ReceiveMail receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
 
-            // 将信息标题列表收入列表中
+            // 获取邮件数量
+            MailCount = receiveMail.GetNumberOfNewMessages();
+
+            // 将信息标题等信息列入DataGridView中
             ArrayList msglist = receiveMail.GetNewMailInfo();
             ChangeDGVMail(msglist);
         }
@@ -105,7 +127,17 @@ namespace CDEmail
 
         private void btnDeleteMail_Click(object sender, EventArgs e)
         {
-            
+            DataGridViewSelectedRowCollection collection = dgvMails.SelectedRows;
+        }
+
+        private void btnPrePage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnNextPage_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void WarningMessage(String text)
