@@ -68,6 +68,12 @@ namespace CDEmail
             get;set;
         }
 
+        // 每页数量
+        public int CountPerPage
+        {
+            get;set;
+        }
+
         // 连接按钮
         private void button1_Click(object sender, EventArgs e)
         {
@@ -77,6 +83,10 @@ namespace CDEmail
         // 连接客服端，获取邮件头部
         private void Connect()
         {
+            // 第1页，每页30封
+            Page = 1;
+            CountPerPage = 30;
+
             Thread thread = new Thread(new ThreadStart(connectToServer));
             thread.IsBackground = true;
             thread.Start();
@@ -92,7 +102,7 @@ namespace CDEmail
             MailCount = receiveMail.GetNumberOfNewMessages();
 
             // 将信息标题等信息列入DataGridView中
-            ArrayList msglist = receiveMail.GetNewMailInfo();
+            ArrayList msglist = receiveMail.GetNewMailInfo(MailCount, Math.Max(MailCount - 30, 0));
             ChangeDGVMail(msglist);
         }
 

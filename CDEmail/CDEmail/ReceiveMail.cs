@@ -489,7 +489,7 @@ namespace CDEmail
                 string input;
                 string line = "";
 
-                for (int n = newcount; n > (newcount > 30? n - 30 : 0); n--)
+                for (int n = start; n > end; n--)
                 {
                     input = "top " + n.ToString() + " 0\r\n";
                     outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
