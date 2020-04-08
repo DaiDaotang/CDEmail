@@ -31,6 +31,12 @@ namespace CDEmail
                 }
             }
         }
+
+        public Email BaseForm
+        {
+            get; set;
+        }
+
         public Receive()
         {
             InitializeComponent();
@@ -46,6 +52,11 @@ namespace CDEmail
                 cp.ExStyle |= 0x02000000;
                 return cp;
             }
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            BaseForm.ShowReceiveList();
         }
     }
 }

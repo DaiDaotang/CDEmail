@@ -51,6 +51,7 @@
             this.btnBack.TabIndex = 7;
             this.btnBack.Text = "返回";
             this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // textBox4
             // 

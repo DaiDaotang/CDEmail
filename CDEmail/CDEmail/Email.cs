@@ -57,6 +57,10 @@ namespace CDEmail
             receive = Receive.GetIntance;
             receiveList = ReceiveList.GetIntance;
 
+            //设置子窗体的父窗体
+            receive.BaseForm = this;
+            receiveList.BaseForm = this;
+
             //初始化按钮
             this.initButton();
         }
@@ -131,7 +135,17 @@ namespace CDEmail
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
+        {
+            ShowSend();
+        }
+
+        public void button2_Click(object sender, EventArgs e)
+        {
+            ShowReceiveList();
+        }
+
+        public void ShowSend()
         {
             try
             {
@@ -159,7 +173,34 @@ namespace CDEmail
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        public void ShowMail()
+        {
+            try
+            {
+                this.initButton();
+                Monitor.Enter(this.lockObj);
+                if (!formSwitchFlag)
+                {
+                    formSwitchFlag = true;
+                    this.ShowForm(pnlCenter, receive);
+                    formSwitchFlag = false;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //
+            }
+            finally
+            {
+                Monitor.Exit(this.lockObj);
+            }
+        }
+
+        public void ShowReceiveList()
         {
             try
             {

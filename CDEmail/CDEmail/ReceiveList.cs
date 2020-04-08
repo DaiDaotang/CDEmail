@@ -16,6 +16,7 @@ namespace CDEmail
     public partial class ReceiveList : Form
     {
         private static ReceiveList formInstance;
+
         public static ReceiveList GetIntance
         {
             get
@@ -47,6 +48,11 @@ namespace CDEmail
                 cp.ExStyle |= 0x02000000;
                 return cp;
             }
+        }
+
+        public Email BaseForm
+        {
+            get;set;
         }
 
         // 连接按钮
@@ -94,6 +100,7 @@ namespace CDEmail
                 return;
             }
 
+            BaseForm.ShowMail();
         }
 
         private void btnDeleteMail_Click(object sender, EventArgs e)
