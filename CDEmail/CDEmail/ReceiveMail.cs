@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace CDEmail
 {
@@ -137,7 +138,6 @@ namespace CDEmail
             }
         }
 
-
         //为了读到数据流中的正确信息，重新建的一个方法（只是在读邮件详细信息是用到，即GetNewMessages()方法中用到，这样就可以正常显示邮件正文的中英文）
         private void Connecttest(TcpClient tcpc)
         {
@@ -168,7 +168,6 @@ namespace CDEmail
             }
         }
 
-
         //断开与服务器的连接
         private void Disconnect()
         {
@@ -179,7 +178,6 @@ namespace CDEmail
             //关闭数据流
             ns.Close();
         }
-
 
         //获得新邮件数目
         #region
@@ -223,217 +221,6 @@ namespace CDEmail
             }
         }
         #endregion
-
-
-        //获取邮件
-        #region
-        /// <summary>
-        /// 获取所有新邮件
-        /// </summary>
-        /// <returns> 返回 ArrayList</returns>
-        public ArrayList GetNewMessages()   //public ArrayList GetNewMessages(string subj)
-        {
-
-            bool blag = false;
-            ArrayList newmsgs = new ArrayList();
-            try
-            {
-                int newcount = GetNumberOfNewMessages();    // 邮件数量
-
-                TcpClient tcpc = Connect(); // 连接 TCP
-
-                for (int n = 1; n < newcount + 1; n++)
-                {
-                    // 输出序号
-                    Console.WriteLine("\t\t-------------------------------------------------" + n);
-
-                    ArrayList msglines = GetRawMessage(tcpc, n);
-                    MailMessage msg = new MailMessage();
-
-                    string msgsubj = GetMessageSubject(msglines).Trim();
-                    #region
-                    ////首先判断Substring是什么编码（"=?gb2312?B?"或者"=?gb2312?Q?"），然后转到相应的解码方法，实现解码
-                    ////如果是"=?gb2312?B?"，转到DecodeBase64（）进行解码
-                    //if (msgsubj.Length > 11)
-                    //{
-                    //    //base64编码
-                    //    if (msgsubj.Substring(0, 11) == "=?gb2312?B?")
-                    //    {
-                    //        blag = true;
-                    //        msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
-                    //        msg.Subject = DecodeBase64(msgsubj);
-                    //    }
-                    //    //如果是"=?gb2312?Q?"编码，先得取到被编码的部分，字符如果没编码就不转到解码方法
-                    //    if (msgsubj.Length > 11)
-                    //    {
-
-                    //        if (msgsubj.Substring(0, 11) == "=?gb2312?Q?")
-                    //        {
-                    //            blag = true;
-                    //            msgsubj = msgsubj.Substring(11, msgsubj.Length - 13);
-                    //            string text = msgsubj;
-                    //            string str = string.Empty;
-                    //            string decodeq = string.Empty;
-                    //            while (text.Length > 0)
-                    //            {
-                    //                //判断编码部分是否开始
-                    //                if (text.Substring(0, 1) == "=")
-                    //                {
-                    //                    decodeq = text.Substring(0, 3);
-                    //                    text = text.Substring(3, text.Length - 3);
-                    //                    //当出现编码部分时，则取出连续的编码部分
-                    //                    while (text.Length > 0)
-                    //                    {
-                    //                        if (text.Substring(0, 1) == "=")
-                    //                        {
-                    //                            decodeq += text.Substring(0, 3);
-                    //                            text = text.Substring(3, text.Length - 3);
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            break;
-                    //                        }
-                    //                    }
-                    //                    //将连续的编码进行解码
-                    //                    str += DecodeQ(decodeq);
-                    //                }
-                    //                //如果该字节没编码，则不用处理
-                    //                else
-                    //                {
-                    //                    str += text.Substring(0, 1);
-                    //                    text = text.Substring(1, text.Length - 1);
-                    //                }
-
-                    //            }
-                    //            //用空格代替subject中的“0”,以便能取道全部的内容
-                    //            msg.Subject = str.Replace("0", " ");
-                    //        }
-                    //    }
-                    //    if (blag == false)
-                    //    {
-                    //        msg.Subject = msgsubj.Replace("0", " ");
-                    //    }
-
-
-                    //}
-                    //else
-                    //{
-                    //    msg.Subject = msgsubj.Replace("0", " ");
-                    //}
-                    //blag = false;
-                    #endregion
-
-                    //取邮件主题
-                    msg.Subject = msgsubj;
-
-                    //取发邮件者的邮件地址
-                    msg.From = new MailAddress(GetMessageFrom(msglines));
-                    //取邮件正文
-                    string msgbody = GetMessageBody(msglines);
-                    Console.WriteLine("0" + msgbody + "1");
-                    msg.Body = msgbody;
-                    newmsgs.Add(msg);
-
-                    //将收到的邮件保存到本地，调用另一个类的保存邮件方法，不使用此功能
-                    //     Filesr.Savefile("subject:"+msg.Subject+"rn"+"sender:"+msg.From+"rn"+"context:"+msg.Body,"mail"+n+".txt");
-                    //删除邮件，不使用
-                    //      DeleteMessage(n);
-                }
-                //断开与服务器的连接
-                Disconnect();
-                return newmsgs;
-            }
-            catch
-            {
-                //     System.Windows.Forms.MessageBox.Show("读取邮件出错，请重试");
-                return newmsgs;
-            }
-        }
-        #endregion
-
-
-        //从服务器读邮件信息
-        private ArrayList GetRawMessage(TcpClient tcpc, int messagenumber)
-        {
-            Byte[] outbytes;
-            string input;
-            string line = "";
-            input = "retr " + messagenumber.ToString() + "\r\n";
-            outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
-            ns.Write(outbytes, 0, outbytes.Length);
-            sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
-            ArrayList msglines = new ArrayList();
-            //每份邮件以英文“.”结束
-            while((line = sr.ReadLine()) != ".")
-            {
-
-                Console.WriteLine(line);
-
-                msglines.Add(line);
-            }
-
-            //do
-            //{
-            //    line = sr.ReadLine();
-            //    msglines.Add(line);
-            //} while (line != ".");
-            //msglines.RemoveAt(msglines.Count - 1);
-            return msglines;
-        }
-
-
-        //获取邮件标题
-        private string GetMessageSubject(ArrayList msglines)
-        {
-            IEnumerator msgenum = msglines.GetEnumerator();
-            while (msgenum.MoveNext())
-            {
-                string line = (string)msgenum.Current;
-                if (line.StartsWith("subject:"))
-                {
-                    return line.Substring(8, line.Length - 8);
-                }
-            }
-            return null;
-        }
-
-
-        //获取邮件的发送人地址
-        private string GetMessageFrom(ArrayList msglines)
-        {
-            string[] tokens;
-            IEnumerator msgenum = msglines.GetEnumerator();
-            while (msgenum.MoveNext())
-            {
-                string line = (string)msgenum.Current;
-                if (line.StartsWith("From"))
-                {
-                    tokens = line.Split(new Char[] { ':' });
-                    return tokens[1].Trim(new Char[] { '<', '>', ' ' });
-                }
-            }
-            return null;
-        }
-
-
-        //邮件正文
-        private string GetMessageBody(ArrayList msglines)
-        {
-            string body = "";
-            string line = " ";
-            IEnumerator msgenum = msglines.GetEnumerator();
-            while (line.CompareTo("") != 0)
-            {
-                msgenum.MoveNext();
-                line = (string)msgenum.Current;
-            }
-            while (msgenum.MoveNext())
-            {
-                body = body + (string)msgenum.Current + "\r\n";
-            }
-            return body;
-        }
-
 
         //删除第几封邮件
         #region
@@ -533,9 +320,11 @@ namespace CDEmail
         // 获取邮件
         public MailMessage GetANewMail(NewMailInfo mailinfo)
         {
+            String rawmessage = sr.ReadToEnd();
             try
             {
-                TcpClient tcpc = Connect(); // 连接 TCP
+                // 连接 TCP
+                TcpClient tcpc = Connect();
 
                 Byte[] outbytes;
                 string input;
@@ -550,9 +339,11 @@ namespace CDEmail
                 while((line = sr.ReadLine()) != ".")
                 {
                     rawmsg.Add(line);
+                    Console.WriteLine(line);
                 }
 
-                Disconnect();   // 断开连接
+                // 断开连接
+                Disconnect();   
 
                 MailMessage mail = new MailMessage();
                 mail.From = mailinfo.From;
@@ -560,9 +351,11 @@ namespace CDEmail
 
                 // 寻找定义的边界
                 String boundary = null;
+                int i = 0;
                 foreach(String str in rawmsg)
                 {
                     Console.WriteLine(line);
+                    i++;
                     if (line.StartsWith("Content-Type: multipart/"))
                     {
                         if (!line.Contains("boundary="))
@@ -585,6 +378,7 @@ namespace CDEmail
                 // 若未寻找到边界
                 if(boundary == null)
                 {
+                    i = 0;
                     foreach(String str in rawmsg)
                     {
 
@@ -593,12 +387,31 @@ namespace CDEmail
                 // 若有边界
                 else
                 {
-                    int i = 0;
+                    while(i < rawmsg.Count)
+                    {
+                        line = (String)rawmsg[i];
+                        // 若可能是边界
+                        if (line.StartsWith("--"))
+                        {
+                            // 若确实是边界
+                            // 隐约觉得这样会提高速度？因为一个是比较前两个字符，另一个是全部比较
+                            if (line == "--" + boundary)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    // 找到正文
+                    while(i < rawmsg.Count)
+                    {
+
+                    }
+
                     for(; i < rawmsg.Count; i++)
                     {
                         line = (String)rawmsg[i];
                         // 若是边界的起始，则可能是边界
-                        if (line.Trim().StartsWith("--"))
+                        if (line.StartsWith("--"))
                         {
                             // 若确实是边界
                             if (line.Contains(boundary))
@@ -608,7 +421,7 @@ namespace CDEmail
                                 {
                                     line = (String)rawmsg[i];
                                     // 又是边界，则退出
-                                    if(line.Trim().StartsWith("--") && line.Contains(boundary))
+                                    if(line.StartsWith("--") && line.Contains(boundary))
                                     {
                                         break;
                                     }
@@ -631,6 +444,36 @@ namespace CDEmail
             }
         }
 
+        // 获取邮件全文
+        public String GetANewMailMessage(NewMailInfo mailinfo)
+        {
+            try
+            {
+                // 连接 TCP
+                TcpClient tcpc = Connect();
+                Byte[] outbytes;
+                string input;
+                String line;
+                input = "retr " + mailinfo.Num.ToString() + "\r\n";
+                outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                ns.Write(outbytes, 0, outbytes.Length);
+                sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
+                String rawmessage = ""; // 原信息
+                while ((line = sr.ReadLine()) != ".")
+                {
+                    rawmessage += line+"\r\n";
+                    Console.WriteLine(line);
+                }
+                Disconnect();
+                return rawmessage;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return null;
+            }
+        }
+        
         // 测试
         public void Test(int n)
         {

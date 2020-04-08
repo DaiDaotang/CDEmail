@@ -45,7 +45,7 @@
             // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(728, 12);
+            this.btnBack.Location = new System.Drawing.Point(728, 6);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(110, 32);
             this.btnBack.TabIndex = 7;
@@ -102,7 +102,7 @@
             this.tFrom.Location = new System.Drawing.Point(86, 63);
             this.tFrom.Name = "tFrom";
             this.tFrom.ReadOnly = true;
-            this.tFrom.Size = new System.Drawing.Size(100, 25);
+            this.tFrom.Size = new System.Drawing.Size(440, 25);
             this.tFrom.TabIndex = 13;
             // 
             // tSubject
@@ -110,12 +110,12 @@
             this.tSubject.Location = new System.Drawing.Point(86, 108);
             this.tSubject.Name = "tSubject";
             this.tSubject.ReadOnly = true;
-            this.tSubject.Size = new System.Drawing.Size(100, 25);
+            this.tSubject.Size = new System.Drawing.Size(440, 25);
             this.tSubject.TabIndex = 14;
             // 
             // btnRcvClousure
             // 
-            this.btnRcvClousure.Location = new System.Drawing.Point(235, 102);
+            this.btnRcvClousure.Location = new System.Drawing.Point(728, 424);
             this.btnRcvClousure.Name = "btnRcvClousure";
             this.btnRcvClousure.Size = new System.Drawing.Size(110, 32);
             this.btnRcvClousure.TabIndex = 15;
@@ -142,7 +142,7 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(361, 63);
+            this.btnDelete.Location = new System.Drawing.Point(728, 104);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(110, 32);
             this.btnDelete.TabIndex = 18;
@@ -151,7 +151,7 @@
             // 
             // btnReply
             // 
-            this.btnReply.Location = new System.Drawing.Point(235, 63);
+            this.btnReply.Location = new System.Drawing.Point(728, 66);
             this.btnReply.Name = "btnReply";
             this.btnReply.Size = new System.Drawing.Size(110, 32);
             this.btnReply.TabIndex = 19;

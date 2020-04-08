@@ -54,6 +54,7 @@
       <DependentUpon>Email.cs</DependentUpon>
     </Compile>
     <Compile Include="NewMailInfo.cs" />
+    <Compile Include="NewMailMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Receive.cs">
