@@ -32,11 +32,6 @@ namespace CDEmail
             }
         }
 
-        public Email BaseForm
-        {
-            get; set;
-        }
-
         public Receive()
         {
             InitializeComponent();
@@ -52,6 +47,33 @@ namespace CDEmail
                 cp.ExStyle |= 0x02000000;
                 return cp;
             }
+        }
+
+        // 父窗体
+        public Email BaseForm
+        {
+            get; set;
+        }
+
+        // 邮件头部信息
+        public NewMailInfo MailInfo
+        {
+            get; set;
+        }
+
+        // 连接服务器的对象
+        public ReceiveMail ReceiveMailConnect
+        {
+            get;set;
+        }
+
+        // 展示邮件
+        public void ShowMailMessage()
+        {
+            MailMessage msg = ReceiveMailConnect.GetANewMail(MailInfo);
+            tFrom.Text = msg.From.ToString();
+            tSubject.Text = msg.Subject;
+            tBody.Text = msg.Body;
         }
 
         private void btnBack_Click(object sender, EventArgs e)

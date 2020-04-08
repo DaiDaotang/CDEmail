@@ -50,28 +50,32 @@ namespace CDEmail
             }
         }
 
-        private ReceiveMail receiveMail = null;
-
+        private ReceiveMail ReceiveMailConnect
+        {
+            get;set;
+        }
 
         // 父窗体
         public Email BaseForm
         {
             get;set;
         }
-
-        // 邮件数量
+        // 邮件总数量
         public int MailCount
         {
             get;set;
         }
-        
-        // 当前正在浏览的页数
-        public int Page
+        // 邮件头部信息列表
+        public ArrayList MailList
         {
             get;set;
         }
-
-        // 每页数量
+        // 当前页数
+        public int CurrentPage
+        {
+            get;set;
+        }
+        // 每页邮件数量
         public int CountPerPage
         {
             get;set;
@@ -97,18 +101,18 @@ namespace CDEmail
         {
 
             // 第1页，每页30封
-            Page = 1;
+            CurrentPage = 1;
             CountPerPage = 30;
 
             // 创建对象
-            receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
+            ReceiveMailConnect = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
 
             // 获取邮件数量
-            MailCount = receiveMail.GetNumberOfNewMessages();
+            MailCount = ReceiveMailConnect.GetNumberOfNewMessages();
 
             // 将信息标题等信息列入DataGridView中
-            ArrayList msglist = receiveMail.GetNewMailInfo(MailCount, Math.Max(MailCount - 30, 0));
-            ChangeDGVMail(msglist);
+            MailList = ReceiveMailConnect.GetNewMailInfo(MailCount, Math.Max(MailCount - 30, 0));
+            ChangeDGVMail(MailList);
         }
 
         // 保证线程安全更改DataGridView
@@ -129,8 +133,7 @@ namespace CDEmail
             }
         }
 
-        // 获取选中的邮件的序号
-        private int GetMailNum()
+        private int GetSelectedMailIndexInList()
         {
             int n = dgvMails.SelectedCells.Count;
 
@@ -145,28 +148,29 @@ namespace CDEmail
                     foreach (DataGridViewCell cell in dgvMails.SelectedCells)
                         if (cell.RowIndex != r)
                             return -1;
-
-                // 获取邮件序号
-                return (int)dgvMails.Rows[r].Cells[0].Value;
+                // 返回Index
+                return r;
             }
         }
 
+        // 读
         private void btnReadMail_Click(object sender, EventArgs e)
         {
             // 获取邮件序号
-            int msg = GetMailNum();
+            int n = GetSelectedMailIndexInList();
 
-            if(msg == -1)
+            if(n == -1)
             {
                 WarningMessage("请选择一封邮件");
             }
             else
             {
                 // WarningMessage(msg.ToString());
-                BaseForm.ShowMail();
+                BaseForm.ShowMail((NewMailInfo)MailList[n], ReceiveMailConnect);
             }                
          }
 
+        // 删
         private void btnDeleteMail_Click(object sender, EventArgs e)
         {
             int n = dgvMails.SelectedCells.Count;
@@ -188,7 +192,7 @@ namespace CDEmail
                 {
                     foreach(int msg in list)
                     {
-                        if (receiveMail.DeleteMessage(msg))
+                        if (ReceiveMailConnect.DeleteMessage(msg))
                         {
                             continue;
                         }

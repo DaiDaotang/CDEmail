@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CDEmail
 {
-    class NewMailInfo
+    public class NewMailInfo
     {
         public int Num
         {

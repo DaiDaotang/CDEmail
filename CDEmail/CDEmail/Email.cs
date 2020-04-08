@@ -174,7 +174,7 @@ namespace CDEmail
             }
         }
 
-        public void ShowMail()
+        public void ShowMail(NewMailInfo mailinfo, ReceiveMail receiveMail)
         {
             try
             {
@@ -183,6 +183,11 @@ namespace CDEmail
                 if (!formSwitchFlag)
                 {
                     formSwitchFlag = true;
+
+                    receive.MailInfo = mailinfo;
+                    receive.ReceiveMailConnect = receiveMail;
+                    receive.ShowMailMessage();
+
                     this.ShowForm(pnlCenter, receive);
                     formSwitchFlag = false;
                 }

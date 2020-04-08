@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.btnBack = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.tBody = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnReadMail = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.tFrom = new System.Windows.Forms.TextBox();
+            this.tSubject = new System.Windows.Forms.TextBox();
             this.btnRcvClousure = new System.Windows.Forms.Button();
             this.btnNextMail = new System.Windows.Forms.Button();
             this.btnPrevMail = new System.Windows.Forms.Button();
@@ -53,14 +53,14 @@
             this.btnBack.UseVisualStyleBackColor = true;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
-            // textBox4
+            // tBody
             // 
-            this.textBox4.Location = new System.Drawing.Point(20, 162);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox4.Size = new System.Drawing.Size(818, 256);
-            this.textBox4.TabIndex = 8;
+            this.tBody.Location = new System.Drawing.Point(20, 162);
+            this.tBody.Multiline = true;
+            this.tBody.Name = "tBody";
+            this.tBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tBody.Size = new System.Drawing.Size(818, 256);
+            this.tBody.TabIndex = 8;
             // 
             // comboBox1
             // 
@@ -97,21 +97,21 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "标题";
             // 
-            // textBox5
+            // tFrom
             // 
-            this.textBox5.Location = new System.Drawing.Point(86, 63);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(100, 25);
-            this.textBox5.TabIndex = 13;
+            this.tFrom.Location = new System.Drawing.Point(86, 63);
+            this.tFrom.Name = "tFrom";
+            this.tFrom.ReadOnly = true;
+            this.tFrom.Size = new System.Drawing.Size(100, 25);
+            this.tFrom.TabIndex = 13;
             // 
-            // textBox6
+            // tSubject
             // 
-            this.textBox6.Location = new System.Drawing.Point(86, 108);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(100, 25);
-            this.textBox6.TabIndex = 14;
+            this.tSubject.Location = new System.Drawing.Point(86, 108);
+            this.tSubject.Name = "tSubject";
+            this.tSubject.ReadOnly = true;
+            this.tSubject.Size = new System.Drawing.Size(100, 25);
+            this.tSubject.TabIndex = 14;
             // 
             // btnRcvClousure
             // 
@@ -169,13 +169,13 @@
             this.Controls.Add(this.btnPrevMail);
             this.Controls.Add(this.btnNextMail);
             this.Controls.Add(this.btnRcvClousure);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.tSubject);
+            this.Controls.Add(this.tFrom);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnReadMail);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.tBody);
             this.Controls.Add(this.btnBack);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Receive";
@@ -187,13 +187,13 @@
 
         #endregion
         private System.Windows.Forms.Button btnBack;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox tBody;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button btnReadMail;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox tFrom;
+        private System.Windows.Forms.TextBox tSubject;
         private System.Windows.Forms.Button btnRcvClousure;
         private System.Windows.Forms.Button btnNextMail;
         private System.Windows.Forms.Button btnPrevMail;

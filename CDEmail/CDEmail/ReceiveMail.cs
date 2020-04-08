@@ -7,7 +7,7 @@ using System.Net.Mail;
 
 namespace CDEmail
 {
-    class ReceiveMail
+    public class ReceiveMail
     {
         string POPServer;
         string user;
@@ -535,11 +535,6 @@ namespace CDEmail
         {
             try
             {
-                MailMessage mail = new MailMessage();
-                mail.From = mailinfo.From;
-                mail.To.Add(mailinfo.To);
-                mail.Subject = mailinfo.Subject;
-
                 TcpClient tcpc = Connect(); // 连接 TCP
 
                 Byte[] outbytes;
@@ -551,11 +546,23 @@ namespace CDEmail
                 ns.Write(outbytes, 0, outbytes.Length);
                 sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
 
+                ArrayList rawmsg = new ArrayList();     // 原始邮件
+                while((line = sr.ReadLine()) != ".")
+                {
+                    rawmsg.Add(line);
+                }
+
+                Disconnect();   // 断开连接
+
+                MailMessage mail = new MailMessage();
+                mail.From = mailinfo.From;
+                mail.Subject = mailinfo.Subject;
+
                 // 寻找定义的边界
                 String boundary = null;
-                while(boundary == null)
+                foreach(String str in rawmsg)
                 {
-                    line = sr.ReadLine();
+                    Console.WriteLine(line);
                     if (line.StartsWith("Content-Type: multipart/"))
                     {
                         if (!line.Contains("boundary="))
@@ -572,44 +579,52 @@ namespace CDEmail
                     }
                 }
 
-                // 根据边界寻找正文
+                // 邮件主体
                 String body = "";
-                while ((line = sr.ReadLine()) != ".")
+
+                // 若未寻找到边界
+                if(boundary == null)
                 {
-                    if (line.StartsWith("--"))
+                    foreach(String str in rawmsg)
                     {
-                        // 第1次边界后是正文
-                        if (line.Contains(boundary))
+
+                    }
+                }
+                // 若有边界
+                else
+                {
+                    int i = 0;
+                    for(; i < rawmsg.Count; i++)
+                    {
+                        line = (String)rawmsg[i];
+                        // 若是边界的起始，则可能是边界
+                        if (line.Trim().StartsWith("--"))
                         {
-                            while (!((line = sr.ReadLine()).StartsWith("--") && line.Contains(boundary)))
+                            // 若确实是边界
+                            if (line.Contains(boundary))
                             {
-                                body += line;
+                                // 第一次边界后就是正文
+                                for(int j = i + 1; j < rawmsg.Count; j++)
+                                {
+                                    line = (String)rawmsg[i];
+                                    // 又是边界，则退出
+                                    if(line.Trim().StartsWith("--") && line.Contains(boundary))
+                                    {
+                                        break;
+                                    }
+                                    body += line;
+                                }
+                                // 正文搜索完毕
+                                break;
                             }
-                            break;
                         }
                     }
                 }
                 mail.Body = body;
-
-                // 根据边界寻找附件
-                //while ((line = sr.ReadLine()) != ".")
-                //{
-                //    // 第2次边界后是附件
-                //    if (line.Contains(boundary))
-                //    {
-                //        Console.WriteLine("附件");
-                //        while (!(line = sr.ReadLine()).Contains(boundary))
-                //        {
-                //            Console.WriteLine(line);
-                //        }
-                //        break;
-                //    }
-                //}
-
                 return mail;
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.StackTrace);
                 return null;
