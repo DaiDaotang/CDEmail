@@ -62,6 +62,12 @@
     <Compile Include="Receive.Designer.cs">
       <DependentUpon>Receive.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReceiveList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReceiveList.Designer.cs">
+      <DependentUpon>ReceiveList.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReceiveMail.cs" />
     <Compile Include="Send.cs">
       <SubType>Form</SubType>
@@ -84,6 +90,9 @@
     </Compile>
     <EmbeddedResource Include="Receive.resx">
       <DependentUpon>Receive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReceiveList.resx">
+      <DependentUpon>ReceiveList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Send.resx">
       <DependentUpon>Send.cs</DependentUpon>

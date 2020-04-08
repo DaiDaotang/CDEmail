@@ -47,51 +47,5 @@ namespace CDEmail
                 return cp;
             }
         }
-
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            Thread thread = new Thread(new ThreadStart(connectToServer));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-
-        private void connectToServer()
-        {
-            // 创建对象
-            ReceiveMail receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
-
-            // 将信息标题列表收入列表中
-            ArrayList msglist = receiveMail.GetNewMailInfo();
-            //for (int i = 0; i < msglist.Count; i++)
-            //{
-            //    Console.WriteLine("Mail " + i + "\r\n" + ((NewMailInfo)msglist[i]).ToString());
-            //}
-            MailMessage mail = receiveMail.GetANewMail((NewMailInfo)msglist[4]);
-            Console.WriteLine("From:");
-            Console.WriteLine(mail.From);
-            Console.WriteLine("To:");
-            Console.WriteLine(mail.To);
-            Console.WriteLine("Subject:");
-            Console.WriteLine(mail.Subject);
-            Console.WriteLine("Body:");
-            Console.WriteLine(mail.Body);
-
-            //receiveMail.Test(3);
-        }
-
-        private void btnDisconnect_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnReadMail_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnRcvClousure_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

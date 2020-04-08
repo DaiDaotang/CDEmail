@@ -39,6 +39,7 @@ namespace CDEmail
         /// </summary>
         public static Send send = null;
         public static Receive receive = null;
+        public static ReceiveList receiveList = null;
 
         /// <summary>
         /// 当前显示窗体
@@ -54,6 +55,8 @@ namespace CDEmail
             //实例化子窗体界面
             send = Send.GetIntance;
             receive = Receive.GetIntance;
+            receiveList = ReceiveList.GetIntance;
+
             //初始化按钮
             this.initButton();
         }
@@ -166,7 +169,8 @@ namespace CDEmail
                 if (!formSwitchFlag)
                 {
                     formSwitchFlag = true;
-                    this.ShowForm(pnlCenter, receive);
+                    //this.ShowForm(pnlCenter, receive);
+                    this.ShowForm(pnlCenter, receiveList);
                     formSwitchFlag = false;
                 }
                 else

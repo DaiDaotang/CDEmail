@@ -28,14 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tPop3Server = new System.Windows.Forms.TextBox();
-            this.tUsername = new System.Windows.Forms.TextBox();
-            this.tPassword = new System.Windows.Forms.TextBox();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.btnDisconnect = new System.Windows.Forms.Button();
+            this.btnBack = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnReadMail = new System.Windows.Forms.Button();
@@ -44,111 +37,51 @@
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.btnRcvClousure = new System.Windows.Forms.Button();
+            this.btnNextMail = new System.Windows.Forms.Button();
+            this.btnPrevMail = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnReply = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // btnBack
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(52, 40);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "POP3服务器";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(52, 108);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(52, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "用户名";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(52, 187);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "密码";
-            // 
-            // tPop3Server
-            // 
-            this.tPop3Server.Location = new System.Drawing.Point(55, 71);
-            this.tPop3Server.Name = "tPop3Server";
-            this.tPop3Server.Size = new System.Drawing.Size(100, 25);
-            this.tPop3Server.TabIndex = 3;
-            this.tPop3Server.Text = "pop.126.com";
-            // 
-            // tUsername
-            // 
-            this.tUsername.Location = new System.Drawing.Point(55, 139);
-            this.tUsername.Name = "tUsername";
-            this.tUsername.Size = new System.Drawing.Size(100, 25);
-            this.tUsername.TabIndex = 4;
-            this.tUsername.Text = "whitecoffeesama@126.com";
-            // 
-            // tPassword
-            // 
-            this.tPassword.Location = new System.Drawing.Point(55, 225);
-            this.tPassword.Name = "tPassword";
-            this.tPassword.Size = new System.Drawing.Size(100, 25);
-            this.tPassword.TabIndex = 5;
-            this.tPassword.Text = "19990202hlx";
-            this.tPassword.UseSystemPasswordChar = true;
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Location = new System.Drawing.Point(55, 321);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(75, 23);
-            this.btnConnect.TabIndex = 6;
-            this.btnConnect.Text = "连接";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // btnDisconnect
-            // 
-            this.btnDisconnect.Location = new System.Drawing.Point(55, 411);
-            this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Size = new System.Drawing.Size(75, 23);
-            this.btnDisconnect.TabIndex = 7;
-            this.btnDisconnect.Text = "断开";
-            this.btnDisconnect.UseVisualStyleBackColor = true;
-            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
+            this.btnBack.Location = new System.Drawing.Point(728, 12);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(110, 32);
+            this.btnBack.TabIndex = 7;
+            this.btnBack.Text = "返回";
+            this.btnBack.UseVisualStyleBackColor = true;
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(212, 258);
+            this.textBox4.Location = new System.Drawing.Point(20, 162);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox4.Size = new System.Drawing.Size(579, 239);
+            this.textBox4.Size = new System.Drawing.Size(818, 256);
             this.textBox4.TabIndex = 8;
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(212, 40);
+            this.comboBox1.Location = new System.Drawing.Point(12, 12);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(387, 23);
             this.comboBox1.TabIndex = 9;
             // 
             // btnReadMail
             // 
-            this.btnReadMail.Location = new System.Drawing.Point(615, 40);
+            this.btnReadMail.Location = new System.Drawing.Point(416, 6);
             this.btnReadMail.Name = "btnReadMail";
             this.btnReadMail.Size = new System.Drawing.Size(110, 32);
             this.btnReadMail.TabIndex = 10;
             this.btnReadMail.Text = "查看邮件";
             this.btnReadMail.UseVisualStyleBackColor = true;
-            this.btnReadMail.Click += new System.EventHandler(this.btnReadMail_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(212, 107);
+            this.label4.Location = new System.Drawing.Point(14, 65);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 15);
             this.label4.TabIndex = 11;
@@ -157,7 +90,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(215, 153);
+            this.label5.Location = new System.Drawing.Point(17, 111);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(37, 15);
             this.label5.TabIndex = 12;
@@ -165,7 +98,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(284, 105);
+            this.textBox5.Location = new System.Drawing.Point(86, 63);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(100, 25);
@@ -173,7 +106,7 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(284, 150);
+            this.textBox6.Location = new System.Drawing.Point(86, 108);
             this.textBox6.Name = "textBox6";
             this.textBox6.ReadOnly = true;
             this.textBox6.Size = new System.Drawing.Size(100, 25);
@@ -181,13 +114,48 @@
             // 
             // btnRcvClousure
             // 
-            this.btnRcvClousure.Location = new System.Drawing.Point(490, 108);
+            this.btnRcvClousure.Location = new System.Drawing.Point(235, 102);
             this.btnRcvClousure.Name = "btnRcvClousure";
-            this.btnRcvClousure.Size = new System.Drawing.Size(143, 60);
+            this.btnRcvClousure.Size = new System.Drawing.Size(110, 32);
             this.btnRcvClousure.TabIndex = 15;
             this.btnRcvClousure.Text = "附件接收";
             this.btnRcvClousure.UseVisualStyleBackColor = true;
-            this.btnRcvClousure.Click += new System.EventHandler(this.btnRcvClousure_Click);
+            // 
+            // btnNextMail
+            // 
+            this.btnNextMail.Location = new System.Drawing.Point(763, 590);
+            this.btnNextMail.Name = "btnNextMail";
+            this.btnNextMail.Size = new System.Drawing.Size(75, 23);
+            this.btnNextMail.TabIndex = 16;
+            this.btnNextMail.Text = "Next";
+            this.btnNextMail.UseVisualStyleBackColor = true;
+            // 
+            // btnPrevMail
+            // 
+            this.btnPrevMail.Location = new System.Drawing.Point(12, 590);
+            this.btnPrevMail.Name = "btnPrevMail";
+            this.btnPrevMail.Size = new System.Drawing.Size(75, 23);
+            this.btnPrevMail.TabIndex = 17;
+            this.btnPrevMail.Text = "Prev";
+            this.btnPrevMail.UseVisualStyleBackColor = true;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(361, 63);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(110, 32);
+            this.btnDelete.TabIndex = 18;
+            this.btnDelete.Text = "删除";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            // 
+            // btnReply
+            // 
+            this.btnReply.Location = new System.Drawing.Point(235, 63);
+            this.btnReply.Name = "btnReply";
+            this.btnReply.Size = new System.Drawing.Size(110, 32);
+            this.btnReply.TabIndex = 19;
+            this.btnReply.Text = "回复";
+            this.btnReply.UseVisualStyleBackColor = true;
             // 
             // Receive
             // 
@@ -195,6 +163,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(850, 625);
+            this.Controls.Add(this.btnReply);
+            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnPrevMail);
+            this.Controls.Add(this.btnNextMail);
             this.Controls.Add(this.btnRcvClousure);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.textBox5);
@@ -203,14 +175,7 @@
             this.Controls.Add(this.btnReadMail);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.btnDisconnect);
-            this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.tPassword);
-            this.Controls.Add(this.tUsername);
-            this.Controls.Add(this.tPop3Server);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnBack);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Receive";
             this.Text = "Receive";
@@ -220,15 +185,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tPop3Server;
-        private System.Windows.Forms.TextBox tUsername;
-        private System.Windows.Forms.TextBox tPassword;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Button btnDisconnect;
+        private System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button btnReadMail;
@@ -237,5 +194,9 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Button btnRcvClousure;
+        private System.Windows.Forms.Button btnNextMail;
+        private System.Windows.Forms.Button btnPrevMail;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnReply;
     }
 }
