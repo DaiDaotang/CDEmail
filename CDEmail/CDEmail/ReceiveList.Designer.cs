@@ -41,13 +41,13 @@
             this.btnDeleteMail = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.dgvMails = new System.Windows.Forms.DataGridView();
+            this.btnPrePage = new System.Windows.Forms.Button();
+            this.btnNextPage = new System.Windows.Forms.Button();
+            this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.To = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnPrePage = new System.Windows.Forms.Button();
-            this.btnNextPage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMails)).BeginInit();
             this.SuspendLayout();
             // 
@@ -175,11 +175,11 @@
             this.dgvMails.AllowUserToDeleteRows = false;
             this.dgvMails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvMails.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Num,
             this.Subject,
             this.From,
             this.Date,
-            this.To,
-            this.Num});
+            this.To});
             this.dgvMails.Location = new System.Drawing.Point(25, 131);
             this.dgvMails.Name = "dgvMails";
             this.dgvMails.ReadOnly = true;
@@ -187,6 +187,38 @@
             this.dgvMails.RowTemplate.Height = 27;
             this.dgvMails.Size = new System.Drawing.Size(684, 463);
             this.dgvMails.TabIndex = 17;
+            // 
+            // btnPrePage
+            // 
+            this.btnPrePage.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnPrePage.Location = new System.Drawing.Point(741, 518);
+            this.btnPrePage.Name = "btnPrePage";
+            this.btnPrePage.Size = new System.Drawing.Size(97, 35);
+            this.btnPrePage.TabIndex = 18;
+            this.btnPrePage.Text = "上一页";
+            this.btnPrePage.UseVisualStyleBackColor = true;
+            this.btnPrePage.Click += new System.EventHandler(this.btnPrePage_Click);
+            // 
+            // btnNextPage
+            // 
+            this.btnNextPage.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnNextPage.Location = new System.Drawing.Point(741, 559);
+            this.btnNextPage.Name = "btnNextPage";
+            this.btnNextPage.Size = new System.Drawing.Size(97, 35);
+            this.btnNextPage.TabIndex = 19;
+            this.btnNextPage.Text = "下一页";
+            this.btnNextPage.UseVisualStyleBackColor = true;
+            this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
+            // 
+            // Num
+            // 
+            this.Num.DataPropertyName = "Num";
+            this.Num.HeaderText = "Num";
+            this.Num.MinimumWidth = 6;
+            this.Num.Name = "Num";
+            this.Num.ReadOnly = true;
+            this.Num.Visible = false;
+            this.Num.Width = 125;
             // 
             // Subject
             // 
@@ -224,38 +256,6 @@
             this.To.ReadOnly = true;
             this.To.Visible = false;
             this.To.Width = 125;
-            // 
-            // Num
-            // 
-            this.Num.DataPropertyName = "Num";
-            this.Num.HeaderText = "Num";
-            this.Num.MinimumWidth = 6;
-            this.Num.Name = "Num";
-            this.Num.ReadOnly = true;
-            this.Num.Visible = false;
-            this.Num.Width = 125;
-            // 
-            // btnPrePage
-            // 
-            this.btnPrePage.Font = new System.Drawing.Font("宋体", 12F);
-            this.btnPrePage.Location = new System.Drawing.Point(741, 518);
-            this.btnPrePage.Name = "btnPrePage";
-            this.btnPrePage.Size = new System.Drawing.Size(97, 35);
-            this.btnPrePage.TabIndex = 18;
-            this.btnPrePage.Text = "上一页";
-            this.btnPrePage.UseVisualStyleBackColor = true;
-            this.btnPrePage.Click += new System.EventHandler(this.btnPrePage_Click);
-            // 
-            // btnNextPage
-            // 
-            this.btnNextPage.Font = new System.Drawing.Font("宋体", 12F);
-            this.btnNextPage.Location = new System.Drawing.Point(741, 559);
-            this.btnNextPage.Name = "btnNextPage";
-            this.btnNextPage.Size = new System.Drawing.Size(97, 35);
-            this.btnNextPage.TabIndex = 19;
-            this.btnNextPage.Text = "下一页";
-            this.btnNextPage.UseVisualStyleBackColor = true;
-            this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
             // 
             // ReceiveList
             // 
@@ -301,12 +301,12 @@
         private System.Windows.Forms.Button btnDeleteMail;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.DataGridView dgvMails;
+        private System.Windows.Forms.Button btnPrePage;
+        private System.Windows.Forms.Button btnNextPage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Num;
         private System.Windows.Forms.DataGridViewTextBoxColumn Subject;
         private System.Windows.Forms.DataGridViewTextBoxColumn From;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn To;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Num;
-        private System.Windows.Forms.Button btnPrePage;
-        private System.Windows.Forms.Button btnNextPage;
     }
 }

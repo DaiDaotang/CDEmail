@@ -50,6 +50,9 @@ namespace CDEmail
             }
         }
 
+        private ReceiveMail receiveMail = null;
+
+
         // 父窗体
         public Email BaseForm
         {
@@ -83,20 +86,22 @@ namespace CDEmail
         // 连接客服端，获取邮件头部
         private void Connect()
         {
-            // 第1页，每页30封
-            Page = 1;
-            CountPerPage = 30;
-
             Thread thread = new Thread(new ThreadStart(connectToServer));
             thread.IsBackground = true;
             thread.Start();
         }
 
         // 连接服务器，将邮件头文件ArrayList添加到DataGridView中
+        // 若能使用这一个函数，则一定是重新连接，所以Page=1
         private void connectToServer()
         {
+
+            // 第1页，每页30封
+            Page = 1;
+            CountPerPage = 30;
+
             // 创建对象
-            ReceiveMail receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
+            receiveMail = new ReceiveMail(tPop3Server.Text, tUsername.Text, tPassword.Text);
 
             // 获取邮件数量
             MailCount = receiveMail.GetNumberOfNewMessages();
@@ -124,20 +129,79 @@ namespace CDEmail
             }
         }
 
+        // 获取选中的邮件的序号
+        private int GetMailNum()
+        {
+            int n = dgvMails.SelectedCells.Count;
+
+            if (n == 0)
+            {
+                return -1;
+            }
+            else
+            {
+                int r = dgvMails.SelectedCells[0].RowIndex;
+                if (n > 1)
+                    foreach (DataGridViewCell cell in dgvMails.SelectedCells)
+                        if (cell.RowIndex != r)
+                            return -1;
+
+                // 获取邮件序号
+                return (int)dgvMails.Rows[r].Cells[0].Value;
+            }
+        }
+
         private void btnReadMail_Click(object sender, EventArgs e)
         {
-            if(dgvMails.SelectedRows.Count != 1)
-            {
-                WarningMessage("请选择一封邮件以读取");
-                return;
-            }
+            // 获取邮件序号
+            int msg = GetMailNum();
 
-            BaseForm.ShowMail();
-        }
+            if(msg == -1)
+            {
+                WarningMessage("请选择一封邮件");
+            }
+            else
+            {
+                // WarningMessage(msg.ToString());
+                BaseForm.ShowMail();
+            }                
+         }
 
         private void btnDeleteMail_Click(object sender, EventArgs e)
         {
-            DataGridViewSelectedRowCollection collection = dgvMails.SelectedRows;
+            int n = dgvMails.SelectedCells.Count;
+
+            if (n == 0)
+            {
+                WarningMessage("请选中邮件");
+            }
+            else
+            {
+                ArrayList list = new ArrayList();
+                int tmp = 0;
+
+                foreach (DataGridViewCell cell in dgvMails.SelectedCells)
+                    if (!list.Contains((tmp = (int)dgvMails.Rows[cell.RowIndex].Cells[0].Value)))
+                        list.Add(tmp);
+
+                if (CheckMessage(String.Format("确认删除{0:D1}封邮件吗？", list.Count), "删除确认框"))
+                {
+                    foreach(int msg in list)
+                    {
+                        if (receiveMail.DeleteMessage(msg))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            WarningMessage("删除有错误，请稍后重试");
+                            break;
+                        }
+                    }
+                    WarningMessage("删除成功");
+                    Connect();
+                }
+            }
         }
 
         private void btnPrePage_Click(object sender, EventArgs e)
@@ -153,6 +217,11 @@ namespace CDEmail
         private void WarningMessage(String text)
         {
             MessageBox.Show(text);
+        }
+
+        private bool CheckMessage(String text, String title)
+        {
+            return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
     }
 }
