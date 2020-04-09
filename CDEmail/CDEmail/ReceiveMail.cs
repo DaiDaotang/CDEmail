@@ -283,7 +283,7 @@ namespace CDEmail
                     ns.Write(outbytes, 0, outbytes.Length);
                     sr = new StreamReader(tcpc.GetStream(), System.Text.Encoding.Default);
 
-                    mailinfo = new NewMailInfo(n);
+                    mailinfo = new NewMailInfo(n, "sss");
 
                     Console.WriteLine("---------------------------------------------------" + n);
                     while ((line = sr.ReadLine()) != ".")
