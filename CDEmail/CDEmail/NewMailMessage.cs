@@ -14,6 +14,11 @@ namespace CDEmail
             get;set;
         } 
 
+        public int Size
+        {
+            get;set;
+        }
+
         public String Body
         {
             get;set;
@@ -24,7 +29,10 @@ namespace CDEmail
             get;set;
         }
     }
+    //whitecoffeesama@126.com
+    // 接下来有4个\r\n\r\n\r\n\r\n\r\n
 
+    //#region
     ///// <summary>
     ///// 获取邮件的类
     ///// zgke@sina.com
@@ -464,19 +472,22 @@ namespace CDEmail
     //    /// <param name="p_Value"></param>
     //    /// <returns></returns>
     //    private byte[] ReadEnd(byte[] p_Value, POP3Client p_Client)
+    //{
+    //    if (System.Text.Encoding.ASCII.GetString(p_Value).IndexOf("\r\n.\r\n") != -1)
+    //            return p_Value;
+    //    System.IO.MemoryStream _Stream = new System.IO.MemoryStream();
+    //    _Stream.Write(p_Value, 0, p_Value.Length);
+    //    while (true)
     //    {
-    //        if (System.Text.Encoding.ASCII.GetString(p_Value).IndexOf("\r\n.\r\n") != -1) return p_Value;
-    //        MemoryStream _Stream = new MemoryStream();
-    //        _Stream.Write(p_Value, 0, p_Value.Length);
-    //        while (true)
-    //        {
-    //            byte[] _WriteBytes = new byte[p_Client.Client.ReceiveBufferSize];
-    //            p_Client.Client.Client.Receive(_WriteBytes);
-    //            _Stream.Write(_WriteBytes, 0, _WriteBytes.Length);
-    //            System.Threading.Thread.Sleep(100);
-    //            if (System.Text.Encoding.ASCII.GetString(_WriteBytes).IndexOf("\r\n.\r\n") != -1) return _Stream.ToArray();
-    //        }
+    //        byte[] _WriteBytes = new byte[p_Client.Client.ReceiveBufferSize];
+    //        p_Client.Client.Client.Receive(_WriteBytes);
+    //        _Stream.Write(_WriteBytes, 0, _WriteBytes.Length);
+    //        System.Threading.Thread.Sleep(100);
+    //        if (System.Text.Encoding.ASCII.GetString(_WriteBytes).IndexOf("\r\n.\r\n") != -1)
+    //                return _Stream.ToArray();
     //    }
+    //}
 
     //}
+    //#endregion
 }

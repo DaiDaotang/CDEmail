@@ -175,7 +175,7 @@
             this.tb_content.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tb_content.Size = new System.Drawing.Size(576, 93);
             this.tb_content.TabIndex = 16;
-            this.tb_content.Text = "看一看能不能成功发送邮件奥利给";
+            this.tb_content.Text = "whitecoffeesama@126.com\\r\\n看一看能不能成功发送邮件奥利给";
             // 
             // Filebutton
             // 

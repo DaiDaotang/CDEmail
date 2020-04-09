@@ -78,6 +78,7 @@
             this.btnReadMail.TabIndex = 10;
             this.btnReadMail.Text = "查看邮件";
             this.btnReadMail.UseVisualStyleBackColor = true;
+            this.btnReadMail.Click += new System.EventHandler(this.btnReadMail_Click);
             // 
             // label4
             // 
@@ -121,6 +122,7 @@
             this.btnRcvClousure.TabIndex = 15;
             this.btnRcvClousure.Text = "附件接收";
             this.btnRcvClousure.UseVisualStyleBackColor = true;
+            this.btnRcvClousure.Click += new System.EventHandler(this.btnRcvClousure_Click);
             // 
             // btnNextMail
             // 
@@ -130,6 +132,7 @@
             this.btnNextMail.TabIndex = 16;
             this.btnNextMail.Text = "Next";
             this.btnNextMail.UseVisualStyleBackColor = true;
+            this.btnNextMail.Click += new System.EventHandler(this.btnNextMail_Click);
             // 
             // btnPrevMail
             // 
@@ -139,6 +142,7 @@
             this.btnPrevMail.TabIndex = 17;
             this.btnPrevMail.Text = "Prev";
             this.btnPrevMail.UseVisualStyleBackColor = true;
+            this.btnPrevMail.Click += new System.EventHandler(this.btnPrevMail_Click);
             // 
             // btnDelete
             // 
@@ -148,6 +152,7 @@
             this.btnDelete.TabIndex = 18;
             this.btnDelete.Text = "删除";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnReply
             // 
@@ -157,6 +162,7 @@
             this.btnReply.TabIndex = 19;
             this.btnReply.Text = "回复";
             this.btnReply.UseVisualStyleBackColor = true;
+            this.btnReply.Click += new System.EventHandler(this.btnReply_Click);
             // 
             // Receive
             // 

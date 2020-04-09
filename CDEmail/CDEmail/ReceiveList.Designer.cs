@@ -41,14 +41,15 @@
             this.btnDeleteMail = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.dgvMails = new System.Windows.Forms.DataGridView();
+            this.btnPrePage = new System.Windows.Forms.Button();
+            this.btnNextPage = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
             this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.To = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnPrePage = new System.Windows.Forms.Button();
-            this.btnNextPage = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.Uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMails)).BeginInit();
             this.SuspendLayout();
             // 
@@ -180,7 +181,8 @@
             this.Subject,
             this.From,
             this.Date,
-            this.To});
+            this.To,
+            this.Uid});
             this.dgvMails.Location = new System.Drawing.Point(25, 131);
             this.dgvMails.Name = "dgvMails";
             this.dgvMails.ReadOnly = true;
@@ -188,6 +190,39 @@
             this.dgvMails.RowTemplate.Height = 27;
             this.dgvMails.Size = new System.Drawing.Size(684, 463);
             this.dgvMails.TabIndex = 17;
+            // 
+            // btnPrePage
+            // 
+            this.btnPrePage.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnPrePage.Location = new System.Drawing.Point(741, 518);
+            this.btnPrePage.Name = "btnPrePage";
+            this.btnPrePage.Size = new System.Drawing.Size(97, 35);
+            this.btnPrePage.TabIndex = 18;
+            this.btnPrePage.Text = "上一页";
+            this.btnPrePage.UseVisualStyleBackColor = true;
+            this.btnPrePage.Click += new System.EventHandler(this.btnPrePage_Click);
+            // 
+            // btnNextPage
+            // 
+            this.btnNextPage.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnNextPage.Location = new System.Drawing.Point(741, 559);
+            this.btnNextPage.Name = "btnNextPage";
+            this.btnNextPage.Size = new System.Drawing.Size(97, 35);
+            this.btnNextPage.TabIndex = 19;
+            this.btnNextPage.Text = "下一页";
+            this.btnNextPage.UseVisualStyleBackColor = true;
+            this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
+            // 
+            // btnTest
+            // 
+            this.btnTest.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnTest.Location = new System.Drawing.Point(741, 211);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(97, 34);
+            this.btnTest.TabIndex = 20;
+            this.btnTest.Text = "测试";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // Num
             // 
@@ -236,38 +271,15 @@
             this.To.Visible = false;
             this.To.Width = 125;
             // 
-            // btnPrePage
+            // Uid
             // 
-            this.btnPrePage.Font = new System.Drawing.Font("宋体", 12F);
-            this.btnPrePage.Location = new System.Drawing.Point(741, 518);
-            this.btnPrePage.Name = "btnPrePage";
-            this.btnPrePage.Size = new System.Drawing.Size(97, 35);
-            this.btnPrePage.TabIndex = 18;
-            this.btnPrePage.Text = "上一页";
-            this.btnPrePage.UseVisualStyleBackColor = true;
-            this.btnPrePage.Click += new System.EventHandler(this.btnPrePage_Click);
-            // 
-            // btnNextPage
-            // 
-            this.btnNextPage.Font = new System.Drawing.Font("宋体", 12F);
-            this.btnNextPage.Location = new System.Drawing.Point(741, 559);
-            this.btnNextPage.Name = "btnNextPage";
-            this.btnNextPage.Size = new System.Drawing.Size(97, 35);
-            this.btnNextPage.TabIndex = 19;
-            this.btnNextPage.Text = "下一页";
-            this.btnNextPage.UseVisualStyleBackColor = true;
-            this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
-            // 
-            // btnTest
-            // 
-            this.btnTest.Font = new System.Drawing.Font("宋体", 12F);
-            this.btnTest.Location = new System.Drawing.Point(741, 211);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(97, 34);
-            this.btnTest.TabIndex = 20;
-            this.btnTest.Text = "测试";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.Uid.DataPropertyName = "Uid";
+            this.Uid.HeaderText = "Uid";
+            this.Uid.MinimumWidth = 6;
+            this.Uid.Name = "Uid";
+            this.Uid.ReadOnly = true;
+            this.Uid.Visible = false;
+            this.Uid.Width = 125;
             // 
             // ReceiveList
             // 
@@ -316,11 +328,12 @@
         private System.Windows.Forms.DataGridView dgvMails;
         private System.Windows.Forms.Button btnPrePage;
         private System.Windows.Forms.Button btnNextPage;
+        private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.DataGridViewTextBoxColumn Num;
         private System.Windows.Forms.DataGridViewTextBoxColumn Subject;
         private System.Windows.Forms.DataGridViewTextBoxColumn From;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn To;
-        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Uid;
     }
 }

@@ -113,7 +113,7 @@ namespace CDEmail
                             + "--unique-boundary-1" + CRLF
                             + "Content-Type:   multipart/alternative;Boundary=\"unique-boundary-2\"" + CRLF + CRLF
                             + "--unique-boundary-2" + CRLF
-                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF              
+                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF
                             + tb_content.Text + CRLF + CRLF
                             + "--unique-boundary-2--" + CRLF + CRLF;
                 szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
@@ -131,10 +131,10 @@ namespace CDEmail
                 {
                     DataRow dr = filelist.Rows[i];
                     cmdData = "--unique-boundary-1" + CRLF
-                        + "Content-Type:application/octet-stream;name=\"" + dr[0].ToString() + "\"" + CRLF
-                        + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF
-                        + "Content-Transfer-Encoding:   base64" + CRLF
-                        + "Content-Disposition:attachment;filename=\"" + dr[0].ToString() + "\"" + CRLF + CRLF
+                        + "Content-Type: application/octet-stream;name=\"" + dr[0].ToString() + "\"" + CRLF
+                        + "Content-Type: text/plain;charset=\"UTF-8\"" + CRLF
+                        + "Content-Transfer-Encoding: base64" + CRLF
+                        + "Content-Disposition: attachment; filename=\"" + dr[0].ToString() + "\"" + CRLF + CRLF
                         + dr[1].ToString() + CRLF + CRLF;
                     szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
                     StrmWtr.Write(szData, 0, szData.Length);

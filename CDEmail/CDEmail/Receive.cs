@@ -18,8 +18,7 @@ namespace CDEmail
 {
     public partial class Receive : Form
     {
-        // 窗口切换
-        #region
+        #region 窗口切换
         private static Receive formInstance;
         public static Receive GetIntance
         {
@@ -54,8 +53,7 @@ namespace CDEmail
         }
         #endregion
 
-        // 变量
-        #region
+        #region 变量
         public Email baseform;
         public NewMailMessage mailmsg;
 
@@ -72,34 +70,83 @@ namespace CDEmail
         private String recv = "";
         #endregion
 
-        // 连接服务器的对象
-        public ReceiveMail ReceiveMailConnect
-        {
-            get;set;
-        }
-
-        // 展示邮件
-        #region
+        #region 展示邮件
         public void ShowMailMessage()
         {
             tFrom.Text = mailmsg.MailInfo.From.ToString();
             tSubject.Text = mailmsg.MailInfo.Subject;
 
-            String rawmessage = ReceiveMailConnect.GetANewMailMessage(mailmsg.MailInfo);
-            ShowMailText(rawmessage);
+            String rawmsg = GetRawMessage();
+            //String rawmessage = ReceiveMailConnect.GetANewMailMessage(mailmsg.MailInfo);
+            ShowMailText(rawmsg);
+            PrintRecv("This is over");
         }
         #endregion
 
-        // 获取
+        #region 获取邮件全文
+        public String GetRawMessage()
+        {
+            try
+            {
+                Login();
+                // 登录失败
+                if (!login)
+                {
+                    return null;
+                }
+                order = "retr " + mailmsg.MailInfo.Num.ToString() + "\r\n";
 
-        // 获取邮件正文 和 附件
-        #region 
+                if (SendOrder(order))
+                {
+                    PrintRecv(recv = sr.ReadLine());
+                    if (recv.Substring(0, 4) == "-ERR")
+                    {
+                        WarningMessage("获取邮件失败");
+                        return null;
+                    }
+                    mailmsg.Size = Convert.ToInt32(recv.Split(' ')[1]);
+
+                    //// 运用MemoryStream
+                    //byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
+                    //MemoryStream ms = new MemoryStream();
+                    //ms.Write(rmb, 0, rmb.Length);
+                    //while (true)
+                    //{
+                    //}
+
+                    String rm = "";
+                    while((recv = sr.ReadLine()) != ".")
+                    {
+                        PrintRecv(recv);
+                        rm += (recv + "\r\n");
+                    }
+                    return rm;
+                }
+                else
+                {
+                    WarningMessage("获取邮件失败");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                PrintRecv(ex.StackTrace);
+                return null;
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        #endregion
+
+        #region 获取邮件正文 和 附件
         public void ShowMailText(String p_Mail)
         {
-            String _ConvertType = GetTextType(p_Mail, "Content-Type: ", ";");       // 获取邮件类型
+            String _ConvertType = GetTextType(p_Mail, "Content-Type:", ";");       // 获取邮件类型
             if (_ConvertType.Length == 0)
             {
-                _ConvertType = GetTextType(p_Mail, "Content-Type: ", "\r");
+                _ConvertType = GetTextType(p_Mail, "Content-Type:", "\r");
             }
 
             int _StarIndex = -1;
@@ -211,8 +258,7 @@ namespace CDEmail
         }
         #endregion
 
-        // 获取类型
-        #region
+        #region 获取类型
         /// <summary>
         /// 获取类型（正则）
         /// </summary>
@@ -229,12 +275,11 @@ namespace CDEmail
             if (_Collection.Count == 0)
                 return "";
             // 返回第一个
-            return _Collection[0].Value;
+            return _Collection[0].Value.Trim();
         }
         #endregion
 
-        // QuotedPrintable编码解码
-        #region
+        #region QuotedPrintable编码解码
         /// <summary>
         /// QuotedPrintable编码接码
         /// </summary>
@@ -276,8 +321,7 @@ namespace CDEmail
         }
         #endregion
 
-        // BASE64编码解码
-        #region
+        #region BASE64编码解码
         /// <summary>
         /// 解码BASE64
         /// </summary>
@@ -292,8 +336,7 @@ namespace CDEmail
         }
         #endregion
 
-        // 转换文字里的字符集
-        #region
+        #region 转换文字里的字符集
         /// <summary>
         /// 转换文字里的字符集
         /// </summary>
@@ -324,32 +367,14 @@ namespace CDEmail
         }
         #endregion
 
-        // 警告信息
-        #region
-        private void WarningMessage(String text)
-        {
-            MessageBox.Show(text);
-        }
-        #endregion
-
-        // 确认信息
-        #region
-        private bool CheckMessage(String text, String title)
-        {
-            return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
-        }
-        #endregion
-
-        // 输出
-        #region
+        #region 输出
         private void PrintRecv(String text)
         {
             Console.WriteLine(text);
         }
         #endregion
 
-        // 发送指令
-        #region
+        #region 发送指令
         private bool SendOrder(String input)
         {
             try
@@ -366,16 +391,12 @@ namespace CDEmail
         }
         #endregion
 
-        // 登录与断线
-        #region
+        #region 登录与断线
         // 登录
         private void Login()
         {
             try
             {
-                String input;
-                String recv;
-
                 tcp = new TcpClient(pop3server, pop3port);
                 ns = tcp.GetStream();
                 sr = new StreamReader(ns, Encoding.Default);
@@ -389,8 +410,8 @@ namespace CDEmail
                 }
 
                 // 用户名
-                input = "user " + user + "\r\n";
-                if (SendOrder(input))
+                order = "user " + user + "\r\n";
+                if (SendOrder(order))
                 {
                     PrintRecv(recv = sr.ReadLine());
                     if (recv.Substring(0, 4) == "-ERR")
@@ -406,8 +427,8 @@ namespace CDEmail
                 }
 
                 // 密码
-                input = "pass " + pwd + "\r\n";
-                if (SendOrder(input))
+                order = "pass " + pwd + "\r\n";
+                if (SendOrder(order))
                 {
                     PrintRecv(recv = sr.ReadLine());
                     if (recv.Substring(0, 4) == "-ERR")
@@ -436,38 +457,83 @@ namespace CDEmail
             if (!login)
                 return;
             login = false;
-            String input = "quit\r\n";
-            SendOrder(input);
+            order = "quit\r\n";
+            SendOrder(order);
             // PrintRecv(sr.ReadLine());
             //sr.Close();
             ns.Close();
         }
         #endregion
 
-        // 测试
-        #region
+        #region 测试
         // 测试按钮
         // 测试函数
         #endregion
 
-        // 返回按钮
-        #region
+        #region 按钮  返回
         private void btnBack_Click(object sender, EventArgs e)
         {
             baseform.ShowReceiveList();
         }
         #endregion
 
-        // 回复按钮
-        #region
+        #region 按钮  回复
+        private void btnReply_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+
+        }
         #endregion
 
-        // 删除按钮
-        #region
+        #region 按钮  删除
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+
+        }
         #endregion
 
-        // 翻页按钮
-        #region
+        #region 按钮  翻页
+        private void btnPrevMail_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+
+        }
+
+        private void btnNextMail_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+
+        }
+        #endregion
+
+        #region 按钮  读取信息
+        private void btnReadMail_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+
+        }
+        #endregion
+
+        #region 按钮  收取附件
+        private void btnRcvClousure_Click(object sender, EventArgs e)
+        {
+            WarningMessage("正在研发");
+        }
+        #endregion
+
+        #region 对话框 警告信息
+        private void WarningMessage(String text)
+        {
+            MessageBox.Show(text);
+        }
+        #endregion
+
+        #region 对话框 确认信息
+        private bool CheckMessage(String text, String title)
+        {
+            return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+        }
         #endregion
     }
 }

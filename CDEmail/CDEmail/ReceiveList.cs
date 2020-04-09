@@ -382,8 +382,8 @@ namespace CDEmail
             }
             else
             {
-                WarningMessage("正在研发");
-                // baseform.ShowMail((NewMailInfo)msglist[n]);
+                // WarningMessage("正在研发");
+                baseform.ShowMail((NewMailInfo)msglist[n], pop3server, pop3port, user, pwd);
             }                
          }
         #endregion
