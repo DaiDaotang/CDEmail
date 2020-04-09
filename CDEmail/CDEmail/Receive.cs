@@ -11,11 +11,15 @@ using System.Threading;
 using System.Collections;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Net.Sockets;
+using System.IO;
 
 namespace CDEmail
 {
     public partial class Receive : Form
     {
+        // 窗口切换
+        #region
         private static Receive formInstance;
         public static Receive GetIntance
         {
@@ -32,7 +36,6 @@ namespace CDEmail
                 }
             }
         }
-
         public Receive()
         {
             InitializeComponent();
@@ -49,18 +52,25 @@ namespace CDEmail
                 return cp;
             }
         }
+        #endregion
 
-        // 父窗体
-        public Email BaseForm
-        {
-            get; set;
-        }
+        // 变量
+        #region
+        public Email baseform;
+        public NewMailMessage mailmsg;
 
-        // 邮件头部信息
-        public NewMailInfo MailInfo
-        {
-            get; set;
-        }
+        public String pop3server;
+        public int pop3port;
+        public String user;
+        public String pwd;
+
+        private TcpClient tcp;
+        private NetworkStream ns;
+        private StreamReader sr;
+        private bool login = false;
+        private String order = "";
+        private String recv = "";
+        #endregion
 
         // 连接服务器的对象
         public ReceiveMail ReceiveMailConnect
@@ -69,31 +79,21 @@ namespace CDEmail
         }
 
         // 展示邮件
+        #region
         public void ShowMailMessage()
         {
-            tFrom.Text = MailInfo.From.ToString();
-            tSubject.Text = MailInfo.Subject;
+            tFrom.Text = mailmsg.MailInfo.From.ToString();
+            tSubject.Text = mailmsg.MailInfo.Subject;
 
-            String rawmessage = ReceiveMailConnect.GetANewMailMessage(MailInfo);
+            String rawmessage = ReceiveMailConnect.GetANewMailMessage(mailmsg.MailInfo);
             ShowMailText(rawmessage);
-            //MailMessage msg = ReceiveMailConnect.GetANewMail(MailInfo);
-            //tFrom.Text = msg.From.ToString();
-            //tSubject.Text = msg.Subject;
-            //tBody.Text = msg.Body;
         }
+        #endregion
 
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            BaseForm.ShowReceiveList();
-        }
+        // 获取
 
         // 获取邮件正文 和 附件
         #region 
-        /// <summary>
-        /// 获取文字主体
-        /// </summary>
-        /// <param name="p_Mail"></param>
-        /// <returns></returns>
         public void ShowMailText(String p_Mail)
         {
             String _ConvertType = GetTextType(p_Mail, "Content-Type: ", ";");       // 获取邮件类型
@@ -322,6 +322,152 @@ namespace CDEmail
             }
             return _Text;
         }
+        #endregion
+
+        // 警告信息
+        #region
+        private void WarningMessage(String text)
+        {
+            MessageBox.Show(text);
+        }
+        #endregion
+
+        // 确认信息
+        #region
+        private bool CheckMessage(String text, String title)
+        {
+            return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+        }
+        #endregion
+
+        // 输出
+        #region
+        private void PrintRecv(String text)
+        {
+            Console.WriteLine(text);
+        }
+        #endregion
+
+        // 发送指令
+        #region
+        private bool SendOrder(String input)
+        {
+            try
+            {
+                Byte[] outbytes = System.Text.Encoding.ASCII.GetBytes(input.ToCharArray());
+                ns.Write(outbytes, 0, outbytes.Length);
+            }
+            catch (Exception ex)
+            {
+                PrintRecv(ex.StackTrace);
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
+        // 登录与断线
+        #region
+        // 登录
+        private void Login()
+        {
+            try
+            {
+                String input;
+                String recv;
+
+                tcp = new TcpClient(pop3server, pop3port);
+                ns = tcp.GetStream();
+                sr = new StreamReader(ns, Encoding.Default);
+
+                // 若连接失败
+                PrintRecv(recv = sr.ReadLine());
+                if (recv.Substring(0, 4) == "-ERR")
+                {
+                    WarningMessage("与服务器连接有误");
+                    return;
+                }
+
+                // 用户名
+                input = "user " + user + "\r\n";
+                if (SendOrder(input))
+                {
+                    PrintRecv(recv = sr.ReadLine());
+                    if (recv.Substring(0, 4) == "-ERR")
+                    {
+                        WarningMessage("与服务器连接有误");
+                        return;
+                    }
+                }
+                else
+                {
+                    WarningMessage("发送指令失败");
+                    return;
+                }
+
+                // 密码
+                input = "pass " + pwd + "\r\n";
+                if (SendOrder(input))
+                {
+                    PrintRecv(recv = sr.ReadLine());
+                    if (recv.Substring(0, 4) == "-ERR")
+                    {
+                        WarningMessage("密码错误");
+                        return;
+                    }
+                }
+                else
+                {
+                    WarningMessage("发送指令失败");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                PrintRecv(ex.StackTrace);
+                return;
+            }
+            login = true;
+        }
+
+        // 断开连接
+        private void Disconnect()
+        {
+            if (!login)
+                return;
+            login = false;
+            String input = "quit\r\n";
+            SendOrder(input);
+            // PrintRecv(sr.ReadLine());
+            //sr.Close();
+            ns.Close();
+        }
+        #endregion
+
+        // 测试
+        #region
+        // 测试按钮
+        // 测试函数
+        #endregion
+
+        // 返回按钮
+        #region
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            baseform.ShowReceiveList();
+        }
+        #endregion
+
+        // 回复按钮
+        #region
+        #endregion
+
+        // 删除按钮
+        #region
+        #endregion
+
+        // 翻页按钮
+        #region
         #endregion
     }
 }

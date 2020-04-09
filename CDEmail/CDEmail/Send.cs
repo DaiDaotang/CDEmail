@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.IO;
+using System.Text;
 
 namespace CDEmail
 {
@@ -87,14 +88,6 @@ namespace CDEmail
 
         private void Sendbutton_Click(object sender, EventArgs e)
         {
-            //string address = tb_server.Text;
-            ////int port = int.Parse(textBox2.Text);
-            //string username = tb_username.Text;
-            //string from = tb_from.Text;
-            //string password = tb_password.Text;
-            //string to = tb_to.Text;
-            //string title = tb_subject.Text;
-            //string body = tb_content.Text;
             try
             {
                 //Send Email
@@ -116,11 +109,13 @@ namespace CDEmail
                 cmdData = "from: " + tb_from.Text + CRLF
                             + "to: " + tb_to.Text + CRLF
                             + "subject: " + tb_subject.Text + CRLF
-
-                            + "Content-Type:multipart/mixed;boundary=\"unique-boundary\"" + CRLF + CRLF + CRLF
-                            + "--unique-boundary" + CRLF
+                            + "Content-Type:multipart/mixed;boundary=\"unique-boundary-1\"" + CRLF + CRLF + CRLF
+                            + "--unique-boundary-1" + CRLF
+                            + "Content-Type:   multipart/alternative;Boundary=\"unique-boundary-2\"" + CRLF + CRLF
+                            + "--unique-boundary-2" + CRLF
                             + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF              
-                            + tb_content.Text + CRLF + CRLF;
+                            + tb_content.Text + CRLF + CRLF
+                            + "--unique-boundary-2--" + CRLF + CRLF;
                 szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
                 StrmWtr.Write(szData, 0, szData.Length);
                 
@@ -135,16 +130,16 @@ namespace CDEmail
                 for (int i = 0; i < filelist.Rows.Count; i++)
                 {
                     DataRow dr = filelist.Rows[i];
-                    cmdData = "--unique-boundary" + CRLF
-                        + "Content-Type:   application/octet-stream;name=\"" + dr[0].ToString() + "\"" + CRLF
+                    cmdData = "--unique-boundary-1" + CRLF
+                        + "Content-Type:application/octet-stream;name=\"" + dr[0].ToString() + "\"" + CRLF
+                        + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF
                         + "Content-Transfer-Encoding:   base64" + CRLF
-                        + "Content-Disposition:attachment;filename=\"" + dr[0].ToString() + " \"" + CRLF
-                        + dr[1].ToString() + CRLF + CRLF
-                        + "--unique-boundary--" + CRLF;
+                        + "Content-Disposition:attachment;filename=\"" + dr[0].ToString() + "\"" + CRLF + CRLF
+                        + dr[1].ToString() + CRLF + CRLF;
                     szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
                     StrmWtr.Write(szData, 0, szData.Length);
                 }
-                cmdData = "." + CRLF;
+                cmdData = "--unique-boundary-1--" + CRLF + "." + CRLF;
                 szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
                 StrmWtr.Write(szData, 0, szData.Length);
                 string r = this.getSatus();

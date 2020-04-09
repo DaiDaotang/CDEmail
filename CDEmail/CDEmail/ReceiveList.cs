@@ -58,10 +58,15 @@ namespace CDEmail
         // 变量
         #region
         public Email baseform;
+        private String pop3server;
+        private int pop3port;
+        private String user;
+        private String pwd;
         private int msgcount;
         private ArrayList msglist;
         private int curpage;
         private int cntperpage;
+
         private TcpClient tcp; 
         private NetworkStream ns;
         private StreamReader sr;
@@ -72,6 +77,10 @@ namespace CDEmail
         #region
         private void button1_Click(object sender, EventArgs e)
         {
+            pop3server = tPop3Server.Text;
+            pop3port = Convert.ToInt32(tPop3Port.Text);
+            user = tUsername.Text;
+            pwd = tPassword.Text;
             FirstConnect();
         }
         #endregion
@@ -125,7 +134,7 @@ namespace CDEmail
                 String input;
                 String recv;
 
-                tcp = new TcpClient(tPop3Server.Text, int.Parse(tPop3Port.Text));
+                tcp = new TcpClient(pop3server, pop3port);
                 ns = tcp.GetStream();
                 sr = new StreamReader(ns, Encoding.Default);
 
@@ -138,7 +147,7 @@ namespace CDEmail
                 }
 
                 // 用户名
-                input = "user " + tUsername.Text + "\r\n";
+                input = "user " + user + "\r\n";
                 if (SendOrder(input))
                 {
                     PrintRecv(recv = sr.ReadLine());
@@ -155,7 +164,7 @@ namespace CDEmail
                 }
 
                 // 密码
-                input = "pass " + tPassword.Text + "\r\n";
+                input = "pass " + pwd + "\r\n";
                 if (SendOrder(input))
                 {
                     PrintRecv(recv = sr.ReadLine());
@@ -253,13 +262,28 @@ namespace CDEmail
                 }
                 String input;
                 String recv;
+                String uid;
                 for(int n = start; n > end; n--)
                 {
+                    // 获取uid
+                    input = "uidl " + n.ToString() + "\r\n";
+                    if (SendOrder(input))
+                    {
+                        PrintRecv(recv = sr.ReadLine());
+                        uid = recv.Split(' ')[2];
+                    }
+                    else
+                    {
+                        WarningMessage("获取邮件失败");
+                        return null;
+                    }
+
+                    // 获取基本信息
                     input = "top " + n.ToString() + " 0\r\n";
                     if (SendOrder(input))
                     {
                         PrintRecv(recv = sr.ReadLine());
-                        mailinfo = new NewMailInfo(n);
+                        mailinfo = new NewMailInfo(n, uid);
                         while((recv = sr.ReadLine()) != ".")
                         {
                             if (recv.ToLower().StartsWith("from"))
@@ -285,20 +309,20 @@ namespace CDEmail
                     else
                     {
                         WarningMessage("获取邮件失败");
-                        res = null;
+                        return null;
                     }
                 }
+                return res;
             }
             catch(Exception ex)
             {
                 PrintRecv(ex.StackTrace);
+                return null;
             }
             finally
             {
                 Disconnect();
             }
-
-            return res;
         }
         #endregion
 
@@ -364,7 +388,7 @@ namespace CDEmail
          }
         #endregion
 
-        // 删除按钮
+        // 删除按钮 需更改：如果这个序号的邮件不再是这一封邮件
         #region
         private void btnDeleteMail_Click(object sender, EventArgs e)
         {
@@ -481,6 +505,32 @@ namespace CDEmail
                 return false;
             }
             return true;
+        }
+        #endregion
+
+        // 测试
+        #region
+        private void Test()
+        {
+            Login();
+            String input = "";
+            String recv = "";
+            for (int i = msgcount; i > 0; i--)
+            {
+                PrintRecv(i.ToString());
+                input = "uidl " + i.ToString() + "\r\n";
+                SendOrder(input);
+                PrintRecv(recv = sr.ReadLine());
+            }
+            Disconnect();
+        }
+        #endregion
+
+        // 测试按钮
+        #region
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            Test();
         }
         #endregion
     }

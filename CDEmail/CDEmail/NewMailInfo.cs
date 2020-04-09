@@ -14,6 +14,11 @@ namespace CDEmail
             get;
         }
 
+        public String Uid
+        {
+            get;
+        }
+
         public MailAddress From
         {
             get;set;
@@ -31,9 +36,10 @@ namespace CDEmail
             get; set;
         }
 
-        public NewMailInfo(int n)
+        public NewMailInfo(int n, String uid)
         {
             Num = n;
+            Uid = uid;
             From = null;
             To = null;
             Subject = null;

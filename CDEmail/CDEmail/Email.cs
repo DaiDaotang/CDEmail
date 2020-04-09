@@ -59,7 +59,7 @@ namespace CDEmail
 
             //设置子窗体的父窗体
             send.BaseForm = this;
-            receive.BaseForm = this;
+            receive.baseform = this;
             receiveList.baseform = this;
 
             //初始化按钮
@@ -174,7 +174,7 @@ namespace CDEmail
             }
         }
 
-        public void ShowMail(NewMailInfo mailinfo)
+        public void ShowMail(NewMailInfo mailinfo, String _server, int _port, String _user, String _pwd)
         {
             try
             {
@@ -184,8 +184,12 @@ namespace CDEmail
                 {
                     formSwitchFlag = true;
 
-                    receive.MailInfo = mailinfo;
-                    // receive.ReceiveMailConnect = receiveMail;
+                    receive.mailmsg = new NewMailMessage();
+                    receive.mailmsg.MailInfo = mailinfo;
+                    receive.pop3server = _server;
+                    receive.pop3port = _port;
+                    receive.user = _user;
+                    receive.pwd = _pwd;
                     receive.ShowMailMessage();
 
                     this.ShowForm(pnlCenter, receive);
