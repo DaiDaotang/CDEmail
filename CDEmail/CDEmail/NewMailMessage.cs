@@ -25,10 +25,6 @@ namespace CDEmail
         }
     }
 
-
-
-
-
     ///// <summary>
     ///// 获取邮件的类
     ///// zgke@sina.com

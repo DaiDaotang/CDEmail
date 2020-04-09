@@ -233,6 +233,7 @@ namespace CDEmail
         }
         #endregion
 
+        // QuotedPrintable编码解码
         #region
         /// <summary>
         /// QuotedPrintable编码接码
@@ -275,6 +276,7 @@ namespace CDEmail
         }
         #endregion
 
+        // BASE64编码解码
         #region
         /// <summary>
         /// 解码BASE64
@@ -290,6 +292,8 @@ namespace CDEmail
         }
         #endregion
 
+        // 转换文字里的字符集
+        #region
         /// <summary>
         /// 转换文字里的字符集
         /// </summary>
@@ -318,5 +322,6 @@ namespace CDEmail
             }
             return _Text;
         }
+        #endregion
     }
 }
