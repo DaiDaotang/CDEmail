@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net;
-using System.Net.Mail;
-using System.Configuration;
-
+using System.Net.Sockets;
+using System.IO;
 
 namespace CDEmail
 {
@@ -56,42 +48,120 @@ namespace CDEmail
                 return cp;
             }
         }
+        #region Private Variables
+
+        private TcpClient Server;
+        private NetworkStream StrmWtr;
+        private StreamReader StrmRdr;
+        private String cmdData;
+        private byte[] szData;
+        private const String CRLF = "\r\n";
+        #endregion
+
+        #region Private Functions
+
+        private String getSatus()
+        {
+            String ret = StrmRdr.ReadLine();
+            lsb_status.Items.Add(ret);
+            lsb_status.SelectedIndex = lsb_status.Items.Count - 1;
+            return ret;
+        }
+        #endregion
+
+        private void AddFile(DataTable filelist, String path)
+        {
+            //根据路径读出文件流   
+            FileStream fstr = new FileStream(path, FileMode.Open);//建立文件流对象   
+            byte[] by = new byte[Convert.ToInt32(fstr.Length)];
+            fstr.Read(by, 0, by.Length);//读取文件内容   
+            fstr.Close();//关闭   
+                         //格式转换   
+            String fileinfo = Convert.ToBase64String(by);//转化为base64编码   
+                                                         //增加到文件表中   
+            DataRow dr = filelist.NewRow();
+            dr[0] = Path.GetFileName(path);//获取文件名   
+            dr[1] = fileinfo;//文件内容   
+            filelist.Rows.Add(dr);//增加   
+        }
 
         private void Sendbutton_Click(object sender, EventArgs e)
         {
-            string address = textBox1.Text;
-            //int port = int.Parse(textBox2.Text);
-            string from = textBox3.Text;
-            string AuthorizationCode = textBox4.Text;
-            string to = textBox5.Text;
-            string title = textBox6.Text;
-            string body = textBox8.Text;
+            //string address = tb_server.Text;
+            ////int port = int.Parse(textBox2.Text);
+            //string username = tb_username.Text;
+            //string from = tb_from.Text;
+            //string password = tb_password.Text;
+            //string to = tb_to.Text;
+            //string title = tb_subject.Text;
+            //string body = tb_content.Text;
+            try
+            {
+                //Send Email
+                cmdData = "MAIL FROM: <" + tb_from.Text + ">" + CRLF;
+                szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                this.getSatus();
+
+                cmdData = "RCPT TO: <" + tb_to.Text + ">" + CRLF;
+                szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                this.getSatus();
+
+                cmdData = "DATA" + CRLF;
+                szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                this.getSatus();
+
+                cmdData = "from: " + tb_from.Text + CRLF
+                            + "to: " + tb_to.Text + CRLF
+                            + "subject: " + tb_subject.Text + CRLF
+
+                            + "Content-Type:multipart/mixed;boundary=\"unique-boundary\"" + CRLF + CRLF + CRLF
+                            + "--unique-boundary" + CRLF
+                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF              
+                            + tb_content.Text + CRLF + CRLF;
+                szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                
+
+                DataTable filelist = new DataTable(); 
+                filelist.Columns.Add(new DataColumn("filename", typeof(string)));//文件名   
+                filelist.Columns.Add(new DataColumn("filecontent", typeof(string)));//文件内容   
+                for (int i = 0; i < comboBox1.Items.Count; i++)
+                {
+                    AddFile(filelist, @comboBox1.GetItemText(comboBox1.Items[i]));
+                }
+                for (int i = 0; i < filelist.Rows.Count; i++)
+                {
+                    DataRow dr = filelist.Rows[i];
+                    cmdData = "--unique-boundary" + CRLF
+                        + "Content-Type:   application/octet-stream;name=\"" + dr[0].ToString() + "\"" + CRLF
+                        + "Content-Transfer-Encoding:   base64" + CRLF
+                        + "Content-Disposition:attachment;filename=\"" + dr[0].ToString() + " \"" + CRLF
+                        + dr[1].ToString() + CRLF + CRLF
+                        + "--unique-boundary--" + CRLF;
+                    szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
+                    StrmWtr.Write(szData, 0, szData.Length);
+                }
+                cmdData = "." + CRLF;
+                szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                string r = this.getSatus();
+                if (r.IndexOf("250")!=-1)
+                {
+                    MessageBox.Show("邮件发送成功！");
+                }
+                else
+                {
+                    MessageBox.Show("邮件发送失败！");
+                }
+            }
+            catch (InvalidOperationException err)
+            {
+                lsb_status.Items.Add("ERROR: " + err.ToString());
+            }
             
-
-
-            /*SendEmail se = new SendEmail("whuddt@126.com", "whuddt@126.com", "AHBZYBMCDUUBJQKM", "smtp.126.com");
-            se.AddGoalAdress("1025563447@qq.com");
-            se.Emailbody = "this  is a  testxvv sdfsfsdfsdf afaf afawdqwdeeeeeee";
-            se.Emailhead = "test wq w email";
-            //se.AddFile(@"C:\Users\66\Desktop\demo.docx");
-            //se.AddFile(@"C:\Users\66\Desktop\demo2.docx");
-            se.Send();*/
-            SendEmail se = new SendEmail(from, from, AuthorizationCode, address);
-            se.AddGoalAdress(to);
-            se.Emailbody = body;
-            se.Emailhead = title;
-            for (int i = 0; i < comboBox1.Items.Count; i++)
-            {
-                se.AddFile(@comboBox1.GetItemText(comboBox1.Items[i]));
-            }
-            if (se.Send())
-            {
-                MessageBox.Show("邮件发送成功！");
-            }
-            else
-            {
-                MessageBox.Show("邮件发送失败！");
-            }
         }
 
     
@@ -120,6 +190,77 @@ namespace CDEmail
                 {
                     comboBox1.Text = "";
                 }
+            }
+        }
+
+        private void btn_conn_Click(object sender, EventArgs e)
+        {
+            if (btn_conn.Text == "连接")
+            {
+                Cursor cr = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+                Server = new TcpClient(tb_server.Text, 25);
+                lsb_status.Items.Clear();
+                try
+                {
+                    StrmWtr = Server.GetStream();
+                    StrmRdr = new StreamReader(Server.GetStream());
+                    this.getSatus();
+
+                    //Login
+                    cmdData = "HELO " + tb_server.Text + CRLF;
+                    szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                    StrmWtr.Write(szData, 0, szData.Length);
+                    this.getSatus();
+
+                    cmdData = "AUTH LOGIN" + CRLF;
+                    szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                    StrmWtr.Write(szData, 0, szData.Length);
+                    this.getSatus();
+
+                    cmdData = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(tb_username.Text)) + CRLF;
+                    szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                    StrmWtr.Write(szData, 0, szData.Length);
+                    this.getSatus();
+
+                    cmdData = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(tb_password.Text)) + CRLF;
+                    szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                    StrmWtr.Write(szData, 0, szData.Length);
+                    this.getSatus();
+
+
+                    btn_conn.Text = "断开";
+                    btn_send.Enabled = true;
+
+                }
+                catch (InvalidOperationException err)
+                {
+                    lsb_status.Items.Add("ERROR: " + err.ToString());
+                }
+                finally
+                {
+                    Cursor.Current = cr;
+                }
+            }
+            else
+            {
+                Cursor cr = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+
+                //Logout
+                cmdData = "QUIT" + CRLF;
+                szData = System.Text.Encoding.ASCII.GetBytes(cmdData.ToCharArray());
+                StrmWtr.Write(szData, 0, szData.Length);
+                this.getSatus();
+
+                StrmWtr.Close();
+                StrmRdr.Close();
+
+
+                btn_conn.Text = "连接";
+                btn_send.Enabled = false;
+
+                Cursor.Current = cr;
             }
         }
     }
