@@ -77,7 +77,6 @@
     <Compile Include="Send.Designer.cs">
       <DependentUpon>Send.cs</DependentUpon>
     </Compile>
-    <Compile Include="SendEmail.cs" />
     <EmbeddedResource Include="Email.resx">
       <DependentUpon>Email.cs</DependentUpon>
     </EmbeddedResource>
