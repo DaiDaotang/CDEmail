@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Mail;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,38 +13,38 @@ namespace CDEmail
     {
         public NewMailInfo MailInfo
         {
-            get;set;
-        } 
+            get; set;
+        }
 
         public int Size
         {
-            get;set;
+            get; set;
         }
 
         public String Body
         {
-            get;set;
+            get; set;
         }
 
         public Object Enclousure
         {
-            get;set;
+            get; set;
         }
     }
     //whitecoffeesama@126.com
     // 接下来有4个\r\n\r\n\r\n\r\n\r\n
 
-    //#region
-    ///// <summary>
-    ///// 获取邮件的类
-    ///// zgke@sina.com
-    ///// qq:116149
-    ///// </summary>
+    /// <summary>
+    /// 获取邮件的类
+    /// zgke@sina.com
+    /// qq:116149
+    /// </summary>
     //public class POP3
     //{
+    //    #region 变量
     //    private string m_Address = "127.0.0.1";
-
     //    private int m_Port = 110;
+    //    #endregion
 
     //    public POP3(string p_Address, int p_Port)
     //    {
@@ -50,6 +52,7 @@ namespace CDEmail
     //        m_Port = p_Port;
     //    }
 
+    //    #region 获取Mail列表
     //    /// <summary>
     //    /// 获取Mail列表
     //    /// </summary>
@@ -70,8 +73,9 @@ namespace CDEmail
     //        if (_Client.Error.Length != 0) throw new Exception("错误信息!" + _Client.Error);
     //        return _Client.MailDataTable;
     //    }
+    //    #endregion
 
-
+    //    #region 获取邮件内容
     //    /// <summary>
     //    /// 获取邮件内容
     //    /// </summary>
@@ -94,9 +98,11 @@ namespace CDEmail
     //        if (_Client.Error.Length != 0) throw new Exception("错误信息!" + _Client.Error);
     //        return _Client.MailTable;
     //    }
+    //    #endregion
 
     //    private class POP3Client
     //    {
+    //        #region 变量
     //        public TcpClient Client;
 
     //        public string UserName = "";
@@ -114,7 +120,9 @@ namespace CDEmail
     //        public bool ReadEnd = false;
 
     //        public int ReadIndex = -1;
-
+    //        private int m_SendMessage = 0;
+    //        private int m_TOPIndex = 1;
+    //        #endregion
 
     //        public POP3Client()
     //        {
@@ -130,9 +138,7 @@ namespace CDEmail
     //            MailTable.Columns.Add("Name", typeof(string));
     //        }
 
-    //        private int m_SendMessage = 0;
-    //        private int m_TOPIndex = 1;
-
+    //        #region 获取下一个登陆到获取列表需要的命令
     //        /// <summary>
     //        /// 获取下一个登陆到获取列表需要的命令
     //        /// </summary>
@@ -221,7 +227,9 @@ namespace CDEmail
     //            ReturnEnd = true;
     //            return new byte[0];
     //        }
+    //        #endregion
 
+    //        #region 转换文字里的字符集
     //        /// <summary>
     //        /// 转换文字里的字符集
     //        /// </summary>
@@ -250,7 +258,7 @@ namespace CDEmail
     //            }
     //            return _Text;
     //        }
-
+    //        #endregion
 
     //        #region 获取邮件正文 和 附件
     //        /// <summary>
@@ -429,6 +437,7 @@ namespace CDEmail
 
     //    }
 
+    //    #region 连接事件
     //    /// <summary>
     //    /// 连接事件
     //    /// </summary>
@@ -439,6 +448,7 @@ namespace CDEmail
     //        byte[] _ReadBytes = new byte[0];
     //        _Client.Client.Client.BeginReceive(_ReadBytes, 0, 0, SocketFlags.None, new AsyncCallback(OnWrite), _Client);
     //    }
+    //    #endregion
 
     //    /// <summary>
     //    /// 连接事件
@@ -467,27 +477,24 @@ namespace CDEmail
     //    }
 
     //    /// <summary>
-    //    /// 获取知道获取到. 否则一直获取数据
+    //    /// 获取直到获取到\r\n.\r\n否则一直获取数据
     //    /// </summary>
     //    /// <param name="p_Value"></param>
     //    /// <returns></returns>
     //    private byte[] ReadEnd(byte[] p_Value, POP3Client p_Client)
-    //{
-    //    if (System.Text.Encoding.ASCII.GetString(p_Value).IndexOf("\r\n.\r\n") != -1)
-    //            return p_Value;
-    //    System.IO.MemoryStream _Stream = new System.IO.MemoryStream();
-    //    _Stream.Write(p_Value, 0, p_Value.Length);
-    //    while (true)
     //    {
-    //        byte[] _WriteBytes = new byte[p_Client.Client.ReceiveBufferSize];
-    //        p_Client.Client.Client.Receive(_WriteBytes);
-    //        _Stream.Write(_WriteBytes, 0, _WriteBytes.Length);
-    //        System.Threading.Thread.Sleep(100);
-    //        if (System.Text.Encoding.ASCII.GetString(_WriteBytes).IndexOf("\r\n.\r\n") != -1)
+    //        if (System.Text.Encoding.ASCII.GetString(p_Value).IndexOf("\r\n.\r\n") != -1)
+    //            return p_Value;
+    //        System.IO.MemoryStream _Stream = new System.IO.MemoryStream();
+    //        _Stream.Write(p_Value, 0, p_Value.Length);
+    //        while (true)
+    //        {
+    //            byte[] _WriteBytes = new byte[p_Client.Client.ReceiveBufferSize];
+    //            p_Client.Client.Client.Receive(_WriteBytes);
+    //            _Stream.Write(_WriteBytes, 0, _WriteBytes.Length);
+    //            System.Threading.Thread.Sleep(100);
+    //            if (System.Text.Encoding.ASCII.GetString(_WriteBytes).IndexOf("\r\n.\r\n") != -1)
     //                return _Stream.ToArray();
+    //        }
     //    }
-    //}
-
-    //}
-    //#endregion
 }

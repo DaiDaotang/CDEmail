@@ -77,7 +77,6 @@ namespace CDEmail
             tSubject.Text = mailmsg.MailInfo.Subject;
 
             String rawmsg = GetRawMessage();
-            //String rawmessage = ReceiveMailConnect.GetANewMailMessage(mailmsg.MailInfo);
             ShowMailText(rawmsg);
             PrintRecv("This is over");
         }
@@ -105,21 +104,24 @@ namespace CDEmail
                         return null;
                     }
                     mailmsg.Size = Convert.ToInt32(recv.Split(' ')[1]);
+                    byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
 
-                    //// 运用MemoryStream
-                    //byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
-                    //MemoryStream ms = new MemoryStream();
-                    //ms.Write(rmb, 0, rmb.Length);
-                    //while (true)
+                    int count = 0;
+                    while ((count = ns.Read(rmb, count, rmb.Length)) != mailmsg.Size) ;
+                    
+                    //String rm = Encoding.UTF8.GetString(rmb, 0, count);
+                    String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
+                    rm += "\r\n.\r\n";
+                    PrintRecv(rm);
+                    PrintRecv(rm.Length.ToString());
+                    PrintRecv(rm.IndexOf("\r\n.\r\n").ToString());
+
+                    //// 普通方法
+                    //while((recv = sr.ReadLine()) != ".")
                     //{
+                    //    PrintRecv(recv);
+                    //    rm += (recv + "\r\n");
                     //}
-
-                    String rm = "";
-                    while((recv = sr.ReadLine()) != ".")
-                    {
-                        PrintRecv(recv);
-                        rm += (recv + "\r\n");
-                    }
                     return rm;
                 }
                 else

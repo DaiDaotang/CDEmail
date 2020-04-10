@@ -136,6 +136,7 @@ namespace CDEmail
 
                 tcp = new TcpClient(pop3server, pop3port);
                 ns = tcp.GetStream();
+                ns.ReadTimeout = 10000;
                 sr = new StreamReader(ns, Encoding.Default);
 
                 // 若连接失败

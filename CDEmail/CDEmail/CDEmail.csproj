@@ -69,7 +69,6 @@
     <Compile Include="ReceiveList.Designer.cs">
       <DependentUpon>ReceiveList.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReceiveMail.cs" />
     <Compile Include="Send.cs">
       <SubType>Form</SubType>
     </Compile>
