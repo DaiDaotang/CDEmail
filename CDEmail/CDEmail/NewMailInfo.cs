@@ -45,13 +45,5 @@ namespace CDEmail
             Subject = null;
             Date = new DateTime();
         }
-
-        public override string ToString()
-        {
-            return "From: \t\t" + From.ToString() + "\r\n" +
-                "To: \t\t" + To.ToString() + "\r\n" +
-                "Subject: \t" + Subject + "\r\n" +
-                "Date: \t\t" + Date.ToString();
-        }
     }
 }
