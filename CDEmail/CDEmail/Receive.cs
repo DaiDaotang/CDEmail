@@ -107,12 +107,16 @@ namespace CDEmail
                     byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
 
                     int count = 0;
-                    while ((count = ns.Read(rmb, count, rmb.Length)) != mailmsg.Size) ;
+                    PrintRecv(mailmsg.Size.ToString());
+                    Thread.Sleep(500);
+                    while ((count = ns.Read(rmb, count, mailmsg.Size)) != mailmsg.Size) ;
+                    // while ((count = ns.Read(rmb, count, rmb.Length)) != mailmsg.Size) ;
                     
                     //String rm = Encoding.UTF8.GetString(rmb, 0, count);
                     String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
                     rm += "\r\n.\r\n";
                     PrintRecv(rm);
+                    PrintRecv(mailmsg.Size.ToString());
                     PrintRecv(rm.Length.ToString());
                     PrintRecv(rm.IndexOf("\r\n.\r\n").ToString());
 
@@ -133,6 +137,7 @@ namespace CDEmail
             catch (Exception ex)
             {
                 PrintRecv(ex.StackTrace);
+                PrintRecv(ex.Message);
                 return null;
             }
             finally

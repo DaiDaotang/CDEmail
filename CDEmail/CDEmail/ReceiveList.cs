@@ -376,7 +376,7 @@ namespace CDEmail
         {
             // 获取邮件序号
             int n = GetSelectedMailIndexInList();
-
+            PrintRecv("Start Read");
             if(n == -1)
             {
                 WarningMessage("请选择一封邮件");
