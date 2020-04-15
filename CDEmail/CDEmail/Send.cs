@@ -111,9 +111,9 @@ namespace CDEmail
                             + "subject: " + tb_subject.Text + CRLF
                             + "Content-Type:multipart/mixed;boundary=\"unique-boundary-1\"" + CRLF + CRLF + CRLF
                             + "--unique-boundary-1" + CRLF
-                            + "Content-Type:   multipart/alternative;Boundary=\"unique-boundary-2\"" + CRLF + CRLF
+                            + "Content-Type:   multipart/alternative;boundary=\"unique-boundary-2\"" + CRLF + CRLF
                             + "--unique-boundary-2" + CRLF
-                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF
+                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF + CRLF
                             + tb_content.Text + CRLF + CRLF
                             + "--unique-boundary-2--" + CRLF + CRLF;
                 szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());

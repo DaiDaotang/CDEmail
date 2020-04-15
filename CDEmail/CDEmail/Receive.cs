@@ -78,7 +78,6 @@ namespace CDEmail
 
             String rawmsg = GetRawMessage();
             ShowMailText(rawmsg);
-            PrintRecv("This is over");
         }
         #endregion
 
@@ -110,22 +109,19 @@ namespace CDEmail
                     PrintRecv(mailmsg.Size.ToString());
                     Thread.Sleep(500);
                     while ((count = ns.Read(rmb, count, mailmsg.Size)) != mailmsg.Size) ;
-                    // while ((count = ns.Read(rmb, count, rmb.Length)) != mailmsg.Size) ;
                     
-                    //String rm = Encoding.UTF8.GetString(rmb, 0, count);
-                    String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
+
+
+                    String rm = Encoding.UTF8.GetString(rmb, 0, count);
+
+
+
+                    //String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
+
+
+
                     rm += "\r\n.\r\n";
                     PrintRecv(rm);
-                    PrintRecv(mailmsg.Size.ToString());
-                    PrintRecv(rm.Length.ToString());
-                    PrintRecv(rm.IndexOf("\r\n.\r\n").ToString());
-
-                    //// 普通方法
-                    //while((recv = sr.ReadLine()) != ".")
-                    //{
-                    //    PrintRecv(recv);
-                    //    rm += (recv + "\r\n");
-                    //}
                     return rm;
                 }
                 else
@@ -150,10 +146,10 @@ namespace CDEmail
         #region 获取邮件正文 和 附件
         public void ShowMailText(String p_Mail)
         {
-            String _ConvertType = GetTextType(p_Mail, "Content-Type:", ";");       // 获取邮件类型
+            String _ConvertType = GetTextType(p_Mail, "Content-Type:", ";").Trim();       // 获取邮件类型
             if (_ConvertType.Length == 0)
             {
-                _ConvertType = GetTextType(p_Mail, "Content-Type:", "\r");
+                _ConvertType = GetTextType(p_Mail, "Content-Type:", "\r").Trim();
             }
 
             int _StarIndex = -1;
@@ -192,9 +188,10 @@ namespace CDEmail
 
                 case "text/plain;":
                     tBody.Text = "";
-                    _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding: ", "\r\n").Trim();
+                    _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding:", "\r\n").Trim();
                     _StarIndex = p_Mail.IndexOf("\r\n\r\n");
-                    if (_StarIndex != -1) _ReturnText = p_Mail.Substring(_StarIndex, p_Mail.Length - _StarIndex);
+                    if (_StarIndex != -1) 
+                        _ReturnText = p_Mail.Substring(_StarIndex, p_Mail.Length - _StarIndex);
                     switch (_Transfer)
                     {
                         case "8bit":
@@ -204,6 +201,7 @@ namespace CDEmail
                             _ReturnText = DecodeQuotedPrintable(_ReturnText, _Encoding);
                             break;
                         case "base64":
+                        default:
                             _ReturnText = DecodeBase64(_ReturnText, _Encoding);
                             break;
                     }
@@ -472,11 +470,6 @@ namespace CDEmail
         }
         #endregion
 
-        #region 测试
-        // 测试按钮
-        // 测试函数
-        #endregion
-
         #region 按钮  返回
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -514,14 +507,6 @@ namespace CDEmail
         }
         #endregion
 
-        #region 按钮  读取信息
-        private void btnReadMail_Click(object sender, EventArgs e)
-        {
-            WarningMessage("正在研发");
-
-        }
-        #endregion
-
         #region 按钮  收取附件
         private void btnRcvClousure_Click(object sender, EventArgs e)
         {
@@ -542,5 +527,11 @@ namespace CDEmail
             return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
         #endregion
+
+        #region 测试
+        // 测试按钮
+        // 测试函数
+        #endregion
+
     }
 }
