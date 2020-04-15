@@ -109,14 +109,10 @@ namespace CDEmail
                     PrintRecv(mailmsg.Size.ToString());
                     Thread.Sleep(500);
                     while ((count = ns.Read(rmb, count, mailmsg.Size)) != mailmsg.Size) ;
-                    
 
+                    //String rm = Encoding.UTF8.GetString(rmb, 0, count);
 
-                    String rm = Encoding.UTF8.GetString(rmb, 0, count);
-
-
-
-                    //String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
+                    String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
 
 
 
