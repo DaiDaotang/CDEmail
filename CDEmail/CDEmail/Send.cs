@@ -116,7 +116,8 @@ namespace CDEmail
                             + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF + CRLF
                             + tb_content.Text + CRLF + CRLF
                             + "--unique-boundary-2--" + CRLF + CRLF;
-                szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
+                // szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
+                szData = System.Text.Encoding.GetEncoding(936).GetBytes(cmdData.ToCharArray());
                 StrmWtr.Write(szData, 0, szData.Length);
                 
 
