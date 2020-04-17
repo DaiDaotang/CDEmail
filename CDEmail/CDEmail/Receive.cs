@@ -514,8 +514,14 @@ namespace CDEmail
         #region 按钮  回复
         private void btnReply_Click(object sender, EventArgs e)
         {
-            WarningMessage("正在研发");
-
+            String tmp = mailmsg.MailInfo.From.ToString().Trim();
+            if(tmp.Contains("<") && tmp.Contains(">"))
+            {
+                int start = tmp.LastIndexOf("<") + 1;
+                int len = tmp.LastIndexOf(">") - start;
+                tmp = tmp.Substring(start, len).Trim();
+            }
+            baseform.ReplyMail(user, pwd, tmp);
         }
         #endregion
 

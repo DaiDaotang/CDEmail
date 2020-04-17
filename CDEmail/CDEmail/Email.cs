@@ -173,6 +173,34 @@ namespace CDEmail
                 Monitor.Exit(this.lockObj);
             }
         }
+        public void ShowReceiveList()
+        {
+            try
+            {
+                this.initButton();
+                this.button2.BackColor = Color.FromArgb(95, 129, 174);
+                Monitor.Enter(this.lockObj);
+                if (!formSwitchFlag)
+                {
+                    formSwitchFlag = true;
+                    //this.ShowForm(pnlCenter, receive);
+                    this.ShowForm(pnlCenter, receiveList);
+                    formSwitchFlag = false;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //
+            }
+            finally
+            {
+                Monitor.Exit(this.lockObj);
+            }
+        }
 
         public void ShowMail(NewMailInfo mailinfo, String _server, int _port, String _user, String _pwd)
         {
@@ -210,18 +238,18 @@ namespace CDEmail
             }
         }
 
-        public void ShowReceiveList()
+        public void ReplyMail(String username, String password, String to)
         {
             try
             {
                 this.initButton();
-                this.button2.BackColor = Color.FromArgb(95, 129, 174);
+                this.button1.BackColor = Color.FromArgb(95, 129, 174);
                 Monitor.Enter(this.lockObj);
                 if (!formSwitchFlag)
                 {
                     formSwitchFlag = true;
-                    //this.ShowForm(pnlCenter, receive);
-                    this.ShowForm(pnlCenter, receiveList);
+                    send.InitTextBox(username, password, to);
+                    this.ShowForm(pnlCenter, send);
                     formSwitchFlag = false;
                 }
                 else
@@ -238,5 +266,6 @@ namespace CDEmail
                 Monitor.Exit(this.lockObj);
             }
         }
+
     }
 }

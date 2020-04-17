@@ -160,8 +160,6 @@ namespace CDEmail
             
         }
 
-    
-
         private void Filebutton_Click(object sender, EventArgs e)
         {
             OpenFileDialog oFDialogSFile = new OpenFileDialog();
@@ -258,6 +256,16 @@ namespace CDEmail
 
                 Cursor.Current = cr;
             }
+        }
+
+        public void InitTextBox(String username, String password, String to)
+        {
+            tb_from.Text = username;
+            tb_username.Text = username;
+            tb_password.Text = password;
+            tb_to.Text = to;
+            tb_subject.Text = "";
+            tb_content.Text = "";
         }
     }
 }
