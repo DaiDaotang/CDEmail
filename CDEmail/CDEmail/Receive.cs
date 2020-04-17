@@ -96,6 +96,8 @@ namespace CDEmail
                 order = "retr " + mailmsg.MailInfo.Num.ToString() + "\r\n";
                 if (SendOrder(order))
                 {
+                    String rm = "";
+                    String tmp = "";
                     PrintRecv(recv = sr.ReadLine());
                     if (recv.Substring(0, 4) == "-ERR")
                     {
@@ -105,16 +107,31 @@ namespace CDEmail
                     mailmsg.Size = Convert.ToInt32(recv.Split(' ')[1]);
                     PrintRecv(mailmsg.Size.ToString());
 
+                    if(mailmsg.Size > 400000)
+                    {
+                        while((recv = sr.ReadLine()) != ".")
+                        {
+                            if (recv.StartsWith("Content-Type:"))
+                            {
+                                tmp = recv.Substring(13, recv.Length - 13).Trim();
+                                if(!tmp.StartsWith("text") && !tmp.StartsWith("multipart"))
+                                   break;
+                            }
+                            rm += recv + "\r\n";
+                        }
+                    }
+                    else
+                    {
+                        // 正常
+                        byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
+                        int count = 0;
+                        Thread.Sleep(500);
+                        while ((count = ns.Read(rmb, count, mailmsg.Size - count)) != mailmsg.Size) ;
+                        rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
+                    }
 
-                    // 正常
-                    byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
-                    int count = 0;
-                    Thread.Sleep(500);
-                    while ((count = ns.Read(rmb, count, mailmsg.Size - count)) != mailmsg.Size) ;
-                    String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
                     rm += "\r\n.\r\n";
-
-                    // PrintRecv(rm);
+                    PrintRecv(rm);
                     return rm;
                 }
                 else
