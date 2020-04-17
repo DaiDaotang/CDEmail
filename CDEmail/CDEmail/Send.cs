@@ -113,11 +113,13 @@ namespace CDEmail
                             + "--unique-boundary-1" + CRLF
                             + "Content-Type:   multipart/alternative;boundary=\"unique-boundary-2\"" + CRLF + CRLF
                             + "--unique-boundary-2" + CRLF
-                            + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF + CRLF
+                            // + "Content-Type:text/plain;charset=\"UTF-8\"" + CRLF + CRLF
+                            + "Content-Type:text/plain;charset=\"GBK\"" + CRLF + CRLF
                             + tb_content.Text + CRLF + CRLF
                             + "--unique-boundary-2--" + CRLF + CRLF;
                 // szData = System.Text.Encoding.UTF8.GetBytes(cmdData.ToCharArray());
-                szData = System.Text.Encoding.GetEncoding(936).GetBytes(cmdData.ToCharArray());
+                // szData = System.Text.Encoding.GetEncoding(936).GetBytes(cmdData.ToCharArray());
+                szData = System.Text.Encoding.GetEncoding("GBK").GetBytes(cmdData.ToCharArray());
                 StrmWtr.Write(szData, 0, szData.Length);
                 
 

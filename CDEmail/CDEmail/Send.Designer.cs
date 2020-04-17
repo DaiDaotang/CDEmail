@@ -103,7 +103,7 @@
             this.tb_password.Name = "tb_password";
             this.tb_password.Size = new System.Drawing.Size(100, 25);
             this.tb_password.TabIndex = 7;
-            this.tb_password.Text = "AHBZYBMCDUUBJQKM";
+            this.tb_password.Text = "GWBMFFULQFZQCALI";
             this.tb_password.UseSystemPasswordChar = true;
             // 
             // label4
