@@ -266,11 +266,20 @@ namespace CDEmail
                     {
                         PrintRecv(recv = sr.ReadLine());
                         mailinfo = new NewMailInfo(n, uid);
+                        String tmp;
                         while ((recv = sr.ReadLine()) != ".")
                         {
                             if (recv.ToLower().StartsWith("from"))
                             {
-                                mailinfo.From = new MailAddress(recv.Substring(5));
+                                tmp = recv.Substring(5);
+                                if(tmp.Contains("=?GBK?") || tmp.Contains("=?GBK?"))
+                                {
+                                    PrintRecv(tmp);
+                                    PrintRecv(Encoding.GetEncoding(936).GetString(Encoding.Unicode.GetBytes(tmp)));
+                                    tmp = tmp.Substring(8, tmp.Length - 10);
+                                    tmp = Encoding.GetEncoding(936).GetString(Encoding.Unicode.GetBytes(tmp));
+                                }
+                                mailinfo.From = new MailAddress(tmp);
                             }
                             else if (recv.ToLower().StartsWith("to"))
                             {
@@ -279,7 +288,21 @@ namespace CDEmail
                             }
                             else if (recv.ToLower().StartsWith("subject"))
                             {
-                                mailinfo.Subject = recv.Substring(8);
+                                tmp = recv.Substring(8);
+                                if (tmp.Contains("=?GBK?"))
+                                {
+                                    PrintRecv(tmp);
+                                    PrintRecv(Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp)));
+                                    PrintRecv(tmp.Substring(9, tmp.Length - 11));
+                                    PrintRecv(Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp)));
+
+                                    tmp = Encoding.GetEncoding(936).GetString(Encoding.Convert(Encoding.GetEncoding("GBK"), Encoding.GetEncoding(936), Encoding.Unicode.GetBytes(tmp.Substring(9, tmp.Length - 11))));
+
+                                    //tmp = Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp));
+                                    //tmp = tmp.Substring(9, tmp.Length - 11);
+                                    //tmp = Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp));
+                                }
+                                mailinfo.Subject = tmp;
                             }
                             else if (recv.ToLower().StartsWith("date"))
                             {
