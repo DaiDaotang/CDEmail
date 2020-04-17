@@ -92,8 +92,8 @@ namespace CDEmail
                 {
                     return null;
                 }
-                order = "retr " + mailmsg.MailInfo.Num.ToString() + "\r\n";
 
+                order = "retr " + mailmsg.MailInfo.Num.ToString() + "\r\n";
                 if (SendOrder(order))
                 {
                     PrintRecv(recv = sr.ReadLine());
@@ -103,14 +103,17 @@ namespace CDEmail
                         return null;
                     }
                     mailmsg.Size = Convert.ToInt32(recv.Split(' ')[1]);
-                    byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
-
-                    int count = 0;
                     PrintRecv(mailmsg.Size.ToString());
+
+
+                    // 正常
+                    byte[] rmb = new byte[mailmsg.Size];    // raw message bytes
+                    int count = 0;
                     Thread.Sleep(500);
-                    while ((count = ns.Read(rmb, count, mailmsg.Size)) != mailmsg.Size) ;
+                    while ((count = ns.Read(rmb, count, mailmsg.Size - count)) != mailmsg.Size) ;
                     String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
                     rm += "\r\n.\r\n";
+
                     // PrintRecv(rm);
                     return rm;
                 }
