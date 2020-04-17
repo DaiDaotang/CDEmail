@@ -197,8 +197,9 @@ namespace CDEmail
                             _ReturnText = DecodeQuotedPrintable(_ReturnText, _Encoding);
                             break;
                         case "base64":
-                        default:
                             _ReturnText = DecodeBase64(_ReturnText, _Encoding);
+                            break;
+                        default:
                             break;
                     }
                     tBody.Text += _ReturnText;
@@ -231,7 +232,7 @@ namespace CDEmail
                         if (_EndIndex == -1) 
                             break;
                         ShowMailText(p_Mail.Substring(_StarIndex, _EndIndex - _StarIndex));
-                        _StarIndex = _EndIndex;
+                        _StarIndex = _EndIndex; 
                     }
                     break;
                 default:
