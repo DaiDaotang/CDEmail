@@ -109,15 +109,9 @@ namespace CDEmail
                     PrintRecv(mailmsg.Size.ToString());
                     Thread.Sleep(500);
                     while ((count = ns.Read(rmb, count, mailmsg.Size)) != mailmsg.Size) ;
-
-                    //String rm = Encoding.UTF8.GetString(rmb, 0, count);
-
                     String rm = Encoding.GetEncoding(936).GetString(rmb, 0, count);
-
-
-
                     rm += "\r\n.\r\n";
-                    PrintRecv(rm);
+                    // PrintRecv(rm);
                     return rm;
                 }
                 else
@@ -467,6 +461,49 @@ namespace CDEmail
         }
         #endregion
 
+        #region 获取邮件数量
+        private int GetMsgCount()
+        {
+            try
+            {
+                Login();
+                // 登录失败
+                if (!login)
+                {
+                    return -1;
+                }
+                String input = "stat\r\n";
+                String recv;
+
+                if (SendOrder(input))
+                {
+                    PrintRecv(recv = sr.ReadLine());
+                    if (recv.Substring(0, 4) == "-ERR")
+                    {
+                        WarningMessage("与服务器连接有误");
+                        return -1;
+                    }
+                    return Convert.ToInt32(recv.Split(' ')[1]);
+
+                }
+                else
+                {
+                    WarningMessage("获取邮件数量失败");
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                PrintRecv(ex.StackTrace);
+                return -1;
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        #endregion
+
         #region 按钮  返回
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -493,14 +530,95 @@ namespace CDEmail
         #region 按钮  翻页
         private void btnPrevMail_Click(object sender, EventArgs e)
         {
-            WarningMessage("正在研发");
-
+            int count = GetMsgCount();
+            int n = mailmsg.MailInfo.Num + 1;
+            if (n > count)
+            {
+                WarningMessage("这是最后一封");
+                return;
+            }
+            SetNewMailInfo(n);
+            mailmsg.Body = "";
+            mailmsg.Enclousure = null;
+            ShowMailMessage();
         }
 
         private void btnNextMail_Click(object sender, EventArgs e)
         {
-            WarningMessage("正在研发");
+            int n = mailmsg.MailInfo.Num - 1;
+            if (n < 1)
+            {
+                WarningMessage("这是第一封");
+                return;
+            }
+            SetNewMailInfo(n);
+            mailmsg.Body = "";
+            mailmsg.Enclousure = null;
+            ShowMailMessage();
+        }
 
+        private void SetNewMailInfo(int n)
+        {
+            try
+            {
+                Login();
+                if (!login)
+                {
+                    WarningMessage("请重试");
+                    return;
+                }
+                // 获取uidl
+                order = "uidl " + n.ToString() + "\r\n";
+                String tmp;
+                NewMailInfo mailinfo = null;
+                if (SendOrder(order))
+                {
+                    tmp = recv.Split(' ')[2];
+                    mailinfo = new NewMailInfo(n, tmp);
+                }
+                else
+                {
+                    WarningMessage("获取失败");
+                    return;
+                }
+                // 获取头部信息
+                order = "top " + n.ToString() + " 0\r\n";
+                if (SendOrder(order))
+                {
+                    PrintRecv(recv = sr.ReadLine());
+                    while ((recv = sr.ReadLine()) != ".")
+                    {
+                        if (recv.ToLower().StartsWith("from"))
+                        {
+                            tmp = recv.Substring(5);
+                            mailinfo.From = new MailAddress(tmp);
+                        }
+                        else if (recv.ToLower().StartsWith("to"))
+                        {
+                            mailinfo.To = new MailAddress(recv.Substring(3));
+
+                        }
+                        else if (recv.ToLower().StartsWith("subject"))
+                        {
+                            tmp = recv.Substring(8);
+                            mailinfo.Subject = tmp;
+                        }
+                        else if (recv.ToLower().StartsWith("date"))
+                        {
+                            mailinfo.Date = Convert.ToDateTime(recv.Substring(5, recv.IndexOf("+0800") - 5).Trim());
+                        }
+                    }
+                }
+                mailmsg.MailInfo = mailinfo;
+            }
+            catch(Exception e)
+            {
+                PrintRecv(e.StackTrace);
+            }
+            finally
+            {
+                Disconnect();
+            }
         }
         #endregion
 
