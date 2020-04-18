@@ -65,9 +65,12 @@ namespace CDEmail
         private TcpClient tcp;
         private NetworkStream ns;
         private StreamReader sr;
+        private bool isTooLong = false;
         private bool login = false;
         private String order = "";
         private String recv = "";
+
+        private String enlousure = "";
         #endregion
 
         #region 展示邮件
@@ -96,6 +99,7 @@ namespace CDEmail
                 order = "retr " + mailmsg.MailInfo.Num.ToString() + "\r\n";
                 if (SendOrder(order))
                 {
+                    btnRcvClousure.Enabled = false;
                     String rm = "";
                     String tmp = "";
                     PrintRecv(recv = sr.ReadLine());
@@ -109,13 +113,17 @@ namespace CDEmail
 
                     if(mailmsg.Size > 400000)
                     {
+                        isTooLong = true;
                         while((recv = sr.ReadLine()) != ".")
                         {
                             if (recv.StartsWith("Content-Type:"))
                             {
                                 tmp = recv.Substring(13, recv.Length - 13).Trim();
                                 if(!tmp.StartsWith("text") && !tmp.StartsWith("multipart"))
-                                   break;
+                                {
+                                    btnRcvClousure.Enabled = true;
+                                    break;
+                                }
                             }
                             rm += recv + "\r\n";
                         }
@@ -131,7 +139,7 @@ namespace CDEmail
                     }
 
                     rm += "\r\n.\r\n";
-                    PrintRecv(rm);
+                    // PrintRecv(rm);
                     return rm;
                 }
                 else
@@ -250,26 +258,10 @@ namespace CDEmail
                     }
                     break;
                 default:
+                    btnRcvClousure.Enabled = true;
+                    enlousure = p_Mail.Substring(p_Mail.IndexOf("Content-Type:"));
+                    PrintRecv("以下是附件\r\n" + enlousure);
                     break;
-                    //if (_ConvertType.IndexOf("application/") == 0)
-                    //{
-                    //    _StarIndex = p_Mail.IndexOf("\r\n\r\n");
-                    //    if (_StarIndex != -1)
-                    //        _ReturnText = p_Mail.Substring(_StarIndex, p_Mail.Length - _StarIndex);
-                    //    _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding: ", "\r\n").Trim();
-                    //    String _Name = GetTextType(p_Mail, "filename=\"", "\"").Replace("\"", "");
-                    //    _Name = GetReadText(_Name);
-                    //    byte[] _FileBytes = new byte[0];
-                    //    switch (_Transfer)
-                    //    {
-                    //        case "base64":
-                    //            _FileBytes = Convert.FromBase64String(_ReturnText);
-                    //            break;
-                    //    }
-                    //    // MailTable.Rows.Add(new object[] { "application/octet-stream", _FileBytes, _Name });
-
-                    //}
-                    //break;
             }
         }
         #endregion
@@ -413,6 +405,8 @@ namespace CDEmail
         {
             try
             {
+                isTooLong = false;
+                enlousure = "";
                 tcp = new TcpClient(pop3server, pop3port);
                 ns = tcp.GetStream();
                 sr = new StreamReader(ns, Encoding.Default);
@@ -475,8 +469,6 @@ namespace CDEmail
             login = false;
             order = "quit\r\n";
             SendOrder(order);
-            // PrintRecv(sr.ReadLine());
-            //sr.Close();
             ns.Close();
         }
         #endregion
@@ -651,7 +643,61 @@ namespace CDEmail
         #region 按钮  收取附件
         private void btnRcvClousure_Click(object sender, EventArgs e)
         {
-            WarningMessage("正在研发");
+            if (isTooLong)
+            {
+                WarningMessage("很长");
+            }
+            else
+            {
+                WarningMessage("不长");
+
+                int start;
+                String transfer = "";
+                String content_type = GetTextType(enlousure, "Content-Type:", "\r\n").Replace(";", "").Trim();
+                String filename = GetTextType(enlousure, "filename=\"", "\"").Replace("\"", "").Trim();
+                String content_transfer = GetTextType(enlousure, "Content-Transfer-Encoding:", "\r\n").Trim();
+                enlousure = enlousure.Substring(enlousure.IndexOf("\r\n\r\n"));
+                byte[] filebytes;
+
+                if (content_type.IndexOf("application/") == 0)
+                {
+                    switch (content_transfer)
+                    {
+                        case "base64":
+                            filebytes = Convert.FromBase64String(enlousure);
+
+                            String path = "G:\\Temp\\enclousure";
+                            if (!Directory.Exists(path))
+                                Directory.CreateDirectory(path);
+                            // MemoryStream memory = new MemoryStream(filebytes);
+                            FileStream stream = new FileStream(path + "\\enclousure.txt", FileMode.OpenOrCreate, FileAccess.Write);
+                            stream.Write(filebytes, 0, filebytes.Length);
+                            stream.Close();
+                            break;
+                    }
+                }
+                else if(content_type.IndexOf("image/") == 0)
+                {
+
+                }
+
+                //if (enlousure.IndexOf("application/") != -1)
+                //{
+                //    start = enlousure.IndexOf("\r\n\r\n");
+                //    if (_StarIndex != -1)
+                //        _ReturnText = p_Mail.Substring(_StarIndex, p_Mail.Length - _StarIndex);
+                //    _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding: ", "\r\n").Trim();
+                //    String _Name = GetTextType(p_Mail, "filename=\"", "\"").Replace("\"", "");
+                //    _Name = GetReadText(_Name);
+                //    byte[] _FileBytes = new byte[0];
+                //    switch (_Transfer)
+                //    {
+                //        case "base64":
+                //            _FileBytes = Convert.FromBase64String(_ReturnText);
+                //            break;
+                //    }
+                //}
+            }
         }
         #endregion
 
