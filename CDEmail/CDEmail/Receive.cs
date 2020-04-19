@@ -81,7 +81,8 @@ namespace CDEmail
             tSubject.Text = mailmsg.MailInfo.Subject;
 
             String rawmsg = GetRawMessage();
-            ShowMailText(rawmsg);
+            // ShowMailText(rawmsg);
+            ShowMailTextRoot(rawmsg);
         }
         #endregion
 
@@ -112,15 +113,15 @@ namespace CDEmail
                     mailmsg.Size = Convert.ToInt32(recv.Split(' ')[1]);
                     PrintRecv(mailmsg.Size.ToString());
 
-                    if(mailmsg.Size > 400000)
+                    if (mailmsg.Size > 400000)
                     {
                         isTooLong = true;
-                        while((recv = sr.ReadLine()) != ".")
+                        while ((recv = sr.ReadLine()) != ".")
                         {
                             if (recv.StartsWith("Content-Type:"))
                             {
                                 tmp = recv.Substring(13, recv.Length - 13).Trim();
-                                if(!tmp.StartsWith("text") && !tmp.StartsWith("multipart"))
+                                if (!tmp.StartsWith("text") && !tmp.StartsWith("multipart"))
                                 {
                                     btnRcvClousure.Enabled = true;
                                     break;
@@ -208,7 +209,7 @@ namespace CDEmail
                 case "text/plain;":
                     _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding:", "\r\n").Trim();
                     _StarIndex = p_Mail.IndexOf("\r\n\r\n");
-                    if (_StarIndex != -1) 
+                    if (_StarIndex != -1)
                         _ReturnText = p_Mail.Substring(_StarIndex, p_Mail.Length - _StarIndex);
                     switch (_Transfer)
                     {
@@ -235,7 +236,7 @@ namespace CDEmail
                     while (true)
                     {
                         _EndIndex = p_Mail.IndexOf("--" + _Boundary, _StarIndex + _Boundary.Length);
-                        if (_EndIndex == -1) 
+                        if (_EndIndex == -1)
                             break;
                         ShowMailText(p_Mail.Substring(_StarIndex, _EndIndex - _StarIndex));
                         _StarIndex = _EndIndex;
@@ -251,16 +252,103 @@ namespace CDEmail
                     while (true)
                     {
                         _EndIndex = p_Mail.IndexOf("--" + _Boundary, _StarIndex + _Boundary.Length);
-                        if (_EndIndex == -1) 
+                        if (_EndIndex == -1)
                             break;
                         ShowMailText(p_Mail.Substring(_StarIndex, _EndIndex - _StarIndex));
-                        _StarIndex = _EndIndex; 
+                        _StarIndex = _EndIndex;
                     }
                     break;
                 default:
                     btnRcvClousure.Enabled = true;
                     enlousure = p_Mail.Substring(p_Mail.IndexOf("Content-Type:"));
                     PrintRecv("以下是附件\r\n" + enlousure);
+                    break;
+            }
+        }
+        #endregion
+
+        #region 获取邮件正文
+        public void ShowMailTextRoot(String rawmsg)
+        {
+            // 1. 寻找boundary等元素
+            rawmsg = rawmsg.Substring(rawmsg.IndexOf("Content-Type:"));
+            PrintRecv(rawmsg);
+            // 2. 将邮件分为两部分，一是正文，二是附件
+            String[] strparts = new String[2];
+            // 3. 寻找边界
+            String boundary = GetTextType(rawmsg, "boundary=\"", "\"").Replace("\"", "");
+            //      1. 正文部分
+            int start = rawmsg.IndexOf("--" + boundary) + boundary.Length + 2;
+            int end = rawmsg.IndexOf("--" + boundary, start + boundary.Length + 2);
+            strparts[0] = rawmsg.Substring(start, end - start);
+            // strparts[0] = strparts[0].Substring(0, strparts[0].Length - end);
+            //      2. 附件部分
+            if(rawmsg.Length - end - boundary.Length - 4 < boundary.Length)
+            {
+                // 无附件
+                strparts[1] = "";
+            }
+            else
+            {
+                // 有附件
+                strparts[1] = rawmsg.Substring(end + boundary.Length + 2);
+                enlousure = strparts[1];
+            }
+
+            OperateBody(strparts[0]);
+        }
+
+        public void OperateBody(String body)
+        {
+            PrintRecv("OperateBody----------------");
+            PrintRecv(body);
+            String content_type = GetTextType(body, "Content-Type:", ";");
+            String boundary = "";
+            String transfer = "";
+            String content = "";
+            String endocdingname = GetTextType(body, "charset=\"", "\"").Replace("\"", "");   // 获取邮件字体类别
+            System.Text.Encoding encoding =
+                (endocdingname == "") ?
+                System.Text.Encoding.Default :
+                System.Text.Encoding.GetEncoding(endocdingname);
+
+            int start, end;
+            switch (content_type)
+            {
+                case "multipart/alternative;":
+                case "multipart/mixed;":
+                    boundary = GetTextType(body, "boundary=\"", "\"").Replace("\"", "");
+                    start = body.IndexOf("--" + boundary + "\r\n");
+                    if (start == -1)
+                        return;
+                    while (true)
+                    {
+                        end = body.IndexOf("--" + boundary, start + boundary.Length);
+                        if (end == -1)
+                            break;
+                        OperateBody(body.Substring(start, end - start));
+                        start = end;
+                    }
+                    break;
+                case "text/html;":
+                case "text/plain;":
+                    transfer = GetTextType(body, "Content-Transfer-Encoding: ", "\r\n").Trim();
+                    start = body.IndexOf("\r\n\r\n");
+                    if (start != -1)
+                        content = body.Substring(start, body.Length - start);
+                    switch (transfer)
+                    {
+                        case "8bit":
+
+                            break;
+                        case "quoted-printable":
+                            content = DecodeQuotedPrintable(content, encoding);
+                            break;
+                        case "base64":
+                            content = DecodeBase64(content, encoding);
+                            break;
+                    }
+                    tBody.Text += content;
                     break;
             }
         }

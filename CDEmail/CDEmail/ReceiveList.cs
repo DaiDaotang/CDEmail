@@ -64,7 +64,7 @@ namespace CDEmail
         private int msgcount;
         private ArrayList msglist;
         private int curpage;
-        private int cntperpage = 5;
+        private int cntperpage = 10;
 
         private TcpClient tcp; 
         private NetworkStream ns;
