@@ -181,7 +181,7 @@
             // 
             this.Filebutton.Location = new System.Drawing.Point(569, 67);
             this.Filebutton.Name = "Filebutton";
-            this.Filebutton.Size = new System.Drawing.Size(75, 23);
+            this.Filebutton.Size = new System.Drawing.Size(75, 36);
             this.Filebutton.TabIndex = 19;
             this.Filebutton.Text = "浏览";
             this.Filebutton.UseVisualStyleBackColor = true;
@@ -191,7 +191,7 @@
             // 
             this.Deletebutton.Location = new System.Drawing.Point(672, 66);
             this.Deletebutton.Name = "Deletebutton";
-            this.Deletebutton.Size = new System.Drawing.Size(75, 23);
+            this.Deletebutton.Size = new System.Drawing.Size(75, 37);
             this.Deletebutton.TabIndex = 20;
             this.Deletebutton.Text = "删除";
             this.Deletebutton.UseVisualStyleBackColor = true;
@@ -227,7 +227,7 @@
             // 
             this.btn_conn.Location = new System.Drawing.Point(12, 385);
             this.btn_conn.Name = "btn_conn";
-            this.btn_conn.Size = new System.Drawing.Size(75, 23);
+            this.btn_conn.Size = new System.Drawing.Size(75, 30);
             this.btn_conn.TabIndex = 24;
             this.btn_conn.Text = "连接";
             this.btn_conn.UseVisualStyleBackColor = true;

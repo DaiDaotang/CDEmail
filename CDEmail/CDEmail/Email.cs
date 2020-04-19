@@ -83,8 +83,8 @@ namespace CDEmail
         {
             try
             {
-                this.button1.BackColor = Color.FromArgb(53, 66, 83);
-                this.button2.BackColor = Color.FromArgb(53, 66, 83);
+                this.button1.BackColor = Color.FromArgb(255, 239, 213);
+                this.button2.BackColor = Color.FromArgb(255, 239, 213);
             }
             catch (Exception ex)
             {
