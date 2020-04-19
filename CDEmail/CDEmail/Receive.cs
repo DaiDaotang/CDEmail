@@ -76,6 +76,7 @@ namespace CDEmail
         #region 展示邮件
         public void ShowMailMessage()
         {
+            tBody.Text = "";
             tFrom.Text = mailmsg.MailInfo.From.ToString();
             tSubject.Text = mailmsg.MailInfo.Subject;
 
@@ -139,7 +140,7 @@ namespace CDEmail
                     }
 
                     rm += "\r\n.\r\n";
-                    // PrintRecv(rm);
+                    PrintRecv(rm);
                     return rm;
                 }
                 else
@@ -205,7 +206,6 @@ namespace CDEmail
                     break;
 
                 case "text/plain;":
-                    tBody.Text = "";
                     _Transfer = GetTextType(p_Mail, "Content-Transfer-Encoding:", "\r\n").Trim();
                     _StarIndex = p_Mail.IndexOf("\r\n\r\n");
                     if (_StarIndex != -1) 
@@ -670,7 +670,7 @@ namespace CDEmail
                             if (!Directory.Exists(path))
                                 Directory.CreateDirectory(path);
                             // MemoryStream memory = new MemoryStream(filebytes);
-                            FileStream stream = new FileStream(path + "\\enclousure.txt", FileMode.OpenOrCreate, FileAccess.Write);
+                            FileStream stream = new FileStream(path + "\\" + filename, FileMode.OpenOrCreate, FileAccess.Write);
                             stream.Write(filebytes, 0, filebytes.Length);
                             stream.Close();
                             break;

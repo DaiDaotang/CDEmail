@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -264,7 +265,8 @@ namespace CDEmail
                     input = "top " + n.ToString() + " 0\r\n";
                     if (SendOrder(input))
                     {
-                        PrintRecv(recv = sr.ReadLine());
+                        recv = sr.ReadLine();
+                        // PrintRecv(recv);
                         mailinfo = new NewMailInfo(n, uid);
                         String tmp;
                         while ((recv = sr.ReadLine()) != ".")
@@ -272,13 +274,12 @@ namespace CDEmail
                             if (recv.ToLower().StartsWith("from"))
                             {
                                 tmp = recv.Substring(5);
-                                if(tmp.Contains("=?GBK?") || tmp.Contains("=?GBK?"))
+
+                                if (tmp.Contains("<"))
                                 {
-                                    PrintRecv(tmp);
-                                    PrintRecv(Encoding.GetEncoding(936).GetString(Encoding.Unicode.GetBytes(tmp)));
-                                    tmp = tmp.Substring(8, tmp.Length - 10);
-                                    tmp = Encoding.GetEncoding(936).GetString(Encoding.Unicode.GetBytes(tmp));
+                                    tmp = tmp.Trim(' ', '"').Split('<')[1].Trim(' ', '>');
                                 }
+
                                 mailinfo.From = new MailAddress(tmp);
                             }
                             else if (recv.ToLower().StartsWith("to"))
@@ -288,20 +289,13 @@ namespace CDEmail
                             }
                             else if (recv.ToLower().StartsWith("subject"))
                             {
-                                tmp = recv.Substring(8);
-                                if (tmp.Contains("=?GBK?"))
+                                tmp = recv.Substring(8).Trim();
+
+                                if (tmp.Contains("=?GBK?")|| tmp.Contains("=?gbk?") || tmp.Contains("=?utf-8?") || tmp.Contains("=?UTF-8?"))
                                 {
-                                    PrintRecv(tmp);
-                                    PrintRecv(Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp)));
-                                    PrintRecv(tmp.Substring(9, tmp.Length - 11));
-                                    PrintRecv(Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp)));
-
-                                    tmp = Encoding.GetEncoding(936).GetString(Encoding.Convert(Encoding.GetEncoding("GBK"), Encoding.GetEncoding(936), Encoding.Unicode.GetBytes(tmp.Substring(9, tmp.Length - 11))));
-
-                                    //tmp = Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp));
-                                    //tmp = tmp.Substring(9, tmp.Length - 11);
-                                    //tmp = Encoding.GetEncoding("GBK").GetString(Encoding.Unicode.GetBytes(tmp));
+                                    tmp = Tools.GetReadText(tmp);
                                 }
+
                                 mailinfo.Subject = tmp;
                             }
                             else if (recv.ToLower().StartsWith("date"))
@@ -360,6 +354,7 @@ namespace CDEmail
                 tcp = new TcpClient(pop3server, pop3port);
                 ns = tcp.GetStream();
                 ns.ReadTimeout = 10000;
+                // sr = new StreamReader(ns, Encoding.GetEncoding("GBK"));
                 sr = new StreamReader(ns, Encoding.Default);
 
                 // 若连接失败
