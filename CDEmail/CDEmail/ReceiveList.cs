@@ -72,119 +72,6 @@ namespace CDEmail
         private bool login = false;
         #endregion
 
-        #region 按钮  连接
-        private void button1_Click(object sender, EventArgs e)
-        {
-            pop3server = tPop3Server.Text;
-            pop3port = Convert.ToInt32(tPop3Port.Text);
-            user = tUsername.Text;
-            pwd = tPassword.Text;
-            curpage = 1;
-
-            Connect();
-        }
-        #endregion
-
-        #region 按钮  读取
-        private void btnReadMail_Click(object sender, EventArgs e)
-        {
-            // 获取邮件序号
-            int n = GetSelectedMailIndexInList();
-            PrintRecv("Start Read");
-            if (n == -1)
-            {
-                WarningMessage("请选择一封邮件");
-            }
-            else
-            {
-                // WarningMessage("正在研发");
-                baseform.ShowMail((NewMailInfo)msglist[n], pop3server, pop3port, user, pwd);
-            }
-        }
-        #endregion
-
-        #region 按钮  删除  需更改：若改序号不再是该邮件
-        private void btnDeleteMail_Click(object sender, EventArgs e)
-        {
-            int n = dgvMails.SelectedCells.Count;
-            if (n == 0)
-            {
-                WarningMessage("请选中邮件");
-            }
-            else
-            {
-                // 要删除的邮件序号
-                ArrayList list = new ArrayList();
-                int tmp = 0;
-                foreach (DataGridViewCell cell in dgvMails.SelectedCells)
-                    if (!list.Contains((tmp = (int)dgvMails.Rows[cell.RowIndex].Cells[0].Value)))
-                        list.Add(tmp);
-
-                if (CheckMessage(String.Format("确认删除{0:D1}封邮件吗？", list.Count), "删除确认框"))
-                {
-                    try
-                    {
-                        String input = "";
-                        String recv = "";
-                        Login();
-                        if (!login)
-                        {
-                            return;
-                        }
-                        foreach (int msg in list)
-                        {
-                            input = "dele " + msg.ToString() + "\r\n";
-                            if (SendOrder(input))
-                            {
-                                PrintRecv(recv = sr.ReadLine());
-                                if (recv.Substring(0, 4) == "-ERR")
-                                {
-                                    WarningMessage("删除有错误，请稍后重试");
-                                    return;
-                                }
-
-                            }
-                            else
-                            {
-                                WarningMessage("删除有错误，请稍后重试");
-                                return;
-                            }
-                        }
-                        WarningMessage("删除成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        PrintRecv(ex.StackTrace);
-                    }
-                    finally
-                    {
-                        Disconnect();
-                        curpage = 1;
-                        Connect();
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region 按钮  换页
-        private void btnPrePage_Click(object sender, EventArgs e)
-        {
-            if (curpage == 1)
-                WarningMessage("已经到达第一页");
-            else
-            {
-                curpage--;
-                GetMsgInfoList();
-            }
-        }
-        private void btnNextPage_Click(object sender, EventArgs e)
-        {
-            curpage++;
-            GetMsgInfoList();
-        }
-        #endregion
-
         #region 发送指令
         private bool SendOrder(String input)
         {
@@ -486,14 +373,127 @@ namespace CDEmail
         }
         #endregion
 
-        #region 警告信息
+        #region 按钮  连接
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pop3server = tPop3Server.Text;
+            pop3port = Convert.ToInt32(tPop3Port.Text);
+            user = tUsername.Text;
+            pwd = tPassword.Text;
+            curpage = 1;
+
+            Connect();
+        }
+        #endregion
+
+        #region 按钮  读取
+        private void btnReadMail_Click(object sender, EventArgs e)
+        {
+            // 获取邮件序号
+            int n = GetSelectedMailIndexInList();
+            PrintRecv("Start Read");
+            if (n == -1)
+            {
+                WarningMessage("请选择一封邮件");
+            }
+            else
+            {
+                // WarningMessage("正在研发");
+                baseform.ShowMail((NewMailInfo)msglist[n], pop3server, pop3port, user, pwd);
+            }
+        }
+        #endregion
+
+        #region 按钮  删除  需更改：若改序号不再是该邮件
+        private void btnDeleteMail_Click(object sender, EventArgs e)
+        {
+            int n = dgvMails.SelectedCells.Count;
+            if (n == 0)
+            {
+                WarningMessage("请选中邮件");
+            }
+            else
+            {
+                // 要删除的邮件序号
+                ArrayList list = new ArrayList();
+                int tmp = 0;
+                foreach (DataGridViewCell cell in dgvMails.SelectedCells)
+                    if (!list.Contains((tmp = (int)dgvMails.Rows[cell.RowIndex].Cells[0].Value)))
+                        list.Add(tmp);
+
+                if (CheckMessage(String.Format("确认删除{0:D1}封邮件吗？", list.Count), "删除确认框"))
+                {
+                    try
+                    {
+                        String input = "";
+                        String recv = "";
+                        Login();
+                        if (!login)
+                        {
+                            return;
+                        }
+                        foreach (int msg in list)
+                        {
+                            input = "dele " + msg.ToString() + "\r\n";
+                            if (SendOrder(input))
+                            {
+                                PrintRecv(recv = sr.ReadLine());
+                                if (recv.Substring(0, 4) == "-ERR")
+                                {
+                                    WarningMessage("删除有错误，请稍后重试");
+                                    return;
+                                }
+
+                            }
+                            else
+                            {
+                                WarningMessage("删除有错误，请稍后重试");
+                                return;
+                            }
+                        }
+                        WarningMessage("删除成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        PrintRecv(ex.StackTrace);
+                    }
+                    finally
+                    {
+                        Disconnect();
+                        curpage = 1;
+                        Connect();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 按钮  换页
+        private void btnPrePage_Click(object sender, EventArgs e)
+        {
+            if (curpage == 1)
+                WarningMessage("已经到达第一页");
+            else
+            {
+                curpage--;
+                GetMsgInfoList();
+            }
+        }
+        private void btnNextPage_Click(object sender, EventArgs e)
+        {
+            curpage++;
+            GetMsgInfoList();
+        }
+        #endregion
+
+        #region 对话框 警告信息
         private void WarningMessage(String text)
         {
             MessageBox.Show(text);
         }
         #endregion
 
-        #region 确认信息
+        #region 对话框 确认信息
         private bool CheckMessage(String text, String title)
         {
             return MessageBox.Show(text, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
@@ -504,27 +504,6 @@ namespace CDEmail
         private void PrintRecv(String text)
         {
             Console.WriteLine(text);
-        }
-        #endregion
-
-        #region 测试
-        private void Test()
-        {
-            Login();
-            String input = "";
-            String recv = "";
-            for (int i = msgcount; i > 0; i--)
-            {
-                PrintRecv(i.ToString());
-                input = "uidl " + i.ToString() + "\r\n";
-                SendOrder(input);
-                PrintRecv(recv = sr.ReadLine());
-            }
-            Disconnect();
-        }
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            Test();
         }
         #endregion
     }
