@@ -41,14 +41,14 @@
             this.btnDeleteMail = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.dgvMails = new System.Windows.Forms.DataGridView();
+            this.btnPrePage = new System.Windows.Forms.Button();
+            this.btnNextPage = new System.Windows.Forms.Button();
             this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.To = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnPrePage = new System.Windows.Forms.Button();
-            this.btnNextPage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMails)).BeginInit();
             this.SuspendLayout();
             // 
@@ -190,63 +190,6 @@
             this.dgvMails.Size = new System.Drawing.Size(684, 463);
             this.dgvMails.TabIndex = 17;
             // 
-            // Num
-            // 
-            this.Num.DataPropertyName = "Num";
-            this.Num.HeaderText = "Num";
-            this.Num.MinimumWidth = 6;
-            this.Num.Name = "Num";
-            this.Num.ReadOnly = true;
-            this.Num.Visible = false;
-            this.Num.Width = 125;
-            // 
-            // Subject
-            // 
-            this.Subject.DataPropertyName = "Subject";
-            this.Subject.HeaderText = "主题";
-            this.Subject.MinimumWidth = 6;
-            this.Subject.Name = "Subject";
-            this.Subject.ReadOnly = true;
-            this.Subject.Width = 200;
-            // 
-            // From
-            // 
-            this.From.DataPropertyName = "From";
-            this.From.HeaderText = "发送人";
-            this.From.MinimumWidth = 6;
-            this.From.Name = "From";
-            this.From.ReadOnly = true;
-            this.From.Width = 175;
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.HeaderText = "时间";
-            this.Date.MinimumWidth = 6;
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.Width = 150;
-            // 
-            // To
-            // 
-            this.To.DataPropertyName = "To";
-            this.To.HeaderText = "To";
-            this.To.MinimumWidth = 6;
-            this.To.Name = "To";
-            this.To.ReadOnly = true;
-            this.To.Visible = false;
-            this.To.Width = 125;
-            // 
-            // Uid
-            // 
-            this.Uid.DataPropertyName = "Uid";
-            this.Uid.HeaderText = "Uid";
-            this.Uid.MinimumWidth = 6;
-            this.Uid.Name = "Uid";
-            this.Uid.ReadOnly = true;
-            this.Uid.Visible = false;
-            this.Uid.Width = 125;
-            // 
             // btnPrePage
             // 
             this.btnPrePage.Font = new System.Drawing.Font("宋体", 12F);
@@ -268,6 +211,63 @@
             this.btnNextPage.Text = "下一页";
             this.btnNextPage.UseVisualStyleBackColor = true;
             this.btnNextPage.Click += new System.EventHandler(this.btnNextPage_Click);
+            // 
+            // Num
+            // 
+            this.Num.DataPropertyName = "Num";
+            this.Num.HeaderText = "Num";
+            this.Num.MinimumWidth = 6;
+            this.Num.Name = "Num";
+            this.Num.ReadOnly = true;
+            this.Num.Visible = false;
+            this.Num.Width = 125;
+            // 
+            // Subject
+            // 
+            this.Subject.DataPropertyName = "Subject";
+            this.Subject.HeaderText = "主题";
+            this.Subject.MinimumWidth = 6;
+            this.Subject.Name = "Subject";
+            this.Subject.ReadOnly = true;
+            this.Subject.Width = 175;
+            // 
+            // From
+            // 
+            this.From.DataPropertyName = "From";
+            this.From.HeaderText = "发送人";
+            this.From.MinimumWidth = 6;
+            this.From.Name = "From";
+            this.From.ReadOnly = true;
+            this.From.Width = 175;
+            // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.HeaderText = "时间";
+            this.Date.MinimumWidth = 6;
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            this.Date.Width = 108;
+            // 
+            // To
+            // 
+            this.To.DataPropertyName = "To";
+            this.To.HeaderText = "To";
+            this.To.MinimumWidth = 6;
+            this.To.Name = "To";
+            this.To.ReadOnly = true;
+            this.To.Visible = false;
+            this.To.Width = 125;
+            // 
+            // Uid
+            // 
+            this.Uid.DataPropertyName = "Uid";
+            this.Uid.HeaderText = "Uid";
+            this.Uid.MinimumWidth = 6;
+            this.Uid.Name = "Uid";
+            this.Uid.ReadOnly = true;
+            this.Uid.Visible = false;
+            this.Uid.Width = 125;
             // 
             // ReceiveList
             // 

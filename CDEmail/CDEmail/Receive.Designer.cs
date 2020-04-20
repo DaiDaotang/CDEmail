@@ -57,7 +57,7 @@
             this.tBody.Multiline = true;
             this.tBody.Name = "tBody";
             this.tBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tBody.Size = new System.Drawing.Size(818, 504);
+            this.tBody.Size = new System.Drawing.Size(818, 486);
             this.tBody.TabIndex = 8;
             // 
             // label4
@@ -106,9 +106,10 @@
             // 
             // btnNextMail
             // 
-            this.btnNextMail.Location = new System.Drawing.Point(763, 590);
+            this.btnNextMail.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnNextMail.Location = new System.Drawing.Point(750, 584);
             this.btnNextMail.Name = "btnNextMail";
-            this.btnNextMail.Size = new System.Drawing.Size(75, 23);
+            this.btnNextMail.Size = new System.Drawing.Size(88, 33);
             this.btnNextMail.TabIndex = 16;
             this.btnNextMail.Text = "Next";
             this.btnNextMail.UseVisualStyleBackColor = true;
@@ -116,9 +117,10 @@
             // 
             // btnPrevMail
             // 
-            this.btnPrevMail.Location = new System.Drawing.Point(12, 590);
+            this.btnPrevMail.Font = new System.Drawing.Font("宋体", 12F);
+            this.btnPrevMail.Location = new System.Drawing.Point(20, 584);
             this.btnPrevMail.Name = "btnPrevMail";
-            this.btnPrevMail.Size = new System.Drawing.Size(75, 23);
+            this.btnPrevMail.Size = new System.Drawing.Size(91, 33);
             this.btnPrevMail.TabIndex = 17;
             this.btnPrevMail.Text = "Prev";
             this.btnPrevMail.UseVisualStyleBackColor = true;

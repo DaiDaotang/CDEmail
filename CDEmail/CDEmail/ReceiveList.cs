@@ -56,20 +56,20 @@ namespace CDEmail
         #endregion
 
         #region 变量
-        public Email baseform;
-        private String pop3server;
-        private int pop3port;
-        private String user;
-        private String pwd;
-        private int msgcount;
-        private ArrayList msglist;
-        private int curpage;
-        private int cntperpage = 10;
+        public Email baseform;          // 父窗口，用于实现查看按钮所需要的页面跳转
+        private String pop3server;      // POP3服务器地址
+        private int pop3port;           // POP3服务器端口
+        private String user;            // 用户名
+        private String pwd;             // 密码
+        private int msgcount;           // 邮件数量
+        private ArrayList msglist;      // 邮件头信息列表
+        private int curpage;            // 当前页面
+        private int cntperpage = 10;    // 每页浏览邮件数量
 
         private TcpClient tcp; 
         private NetworkStream ns;
         private StreamReader sr;
-        private bool login = false;
+        private bool login = false;     // 是否已登录
         #endregion
 
         #region 发送指令
@@ -153,7 +153,6 @@ namespace CDEmail
                     if (SendOrder(input))
                     {
                         recv = sr.ReadLine();
-                        // PrintRecv(recv);
                         mailinfo = new NewMailInfo(n, uid);
                         String tmp;
                         while ((recv = sr.ReadLine()) != ".")
@@ -391,20 +390,18 @@ namespace CDEmail
         {
             // 获取邮件序号
             int n = GetSelectedMailIndexInList();
-            PrintRecv("Start Read");
             if (n == -1)
             {
                 WarningMessage("请选择一封邮件");
             }
             else
             {
-                // WarningMessage("正在研发");
                 baseform.ShowMail((NewMailInfo)msglist[n], pop3server, pop3port, user, pwd);
             }
         }
         #endregion
 
-        #region 按钮  删除  需更改：若改序号不再是该邮件
+        #region 按钮  删除
         private void btnDeleteMail_Click(object sender, EventArgs e)
         {
             int n = dgvMails.SelectedCells.Count;
@@ -443,7 +440,6 @@ namespace CDEmail
                                     WarningMessage("删除有错误，请稍后重试");
                                     return;
                                 }
-
                             }
                             else
                             {

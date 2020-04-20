@@ -54,24 +54,24 @@ namespace CDEmail
         #endregion
 
         #region 变量
-        public Email baseform;
-        public NewMailMessage mailmsg;
+        public Email baseform;              // 父窗口，用于实现跳转页面
+        public NewMailMessage mailmsg;      // 自定义邮件信息
 
-        public String pop3server;
-        public int pop3port;
-        public String user;
-        public String pwd;
+        public String pop3server;           // POP3服务器地址
+        public int pop3port;                // POP3服务器端口
+        public String user;                 // 用户名
+        public String pwd;                  // 密码
 
         private TcpClient tcp;
         private NetworkStream ns;
         private StreamReader sr;
-        private bool isTooLong = false;
-        private bool login = false;
-        private String order = "";
-        private String recv = "";
+        private bool isTooLong = false;     // 附件是否过大
+        private bool login = false;         // 是否已登录
+        private String order = "";          // 指令
+        private String recv = "";           // 接收数据
 
-        private String enlousure = "";
-        private String boundary = "";
+        private String enlousure = "";      // 附件
+        private String boundary = "";       // 边界
         #endregion
 
         #region 展示邮件
@@ -298,11 +298,7 @@ namespace CDEmail
 
         public void OperateBody(String body)
         {
-            PrintRecv("OperateBody----------------");
-            PrintRecv(body);
             String content_type = GetTextType(body, "Content-Type:", ";");
-            String boundary = "";
-            String transfer = "";
             String content = "";
             String endocdingname = GetTextType(body, "charset=\"", "\"").Replace("\"", "");   // 获取邮件字体类别
             System.Text.Encoding encoding =
@@ -315,7 +311,7 @@ namespace CDEmail
             {
                 case "multipart/alternative;":
                 case "multipart/mixed;":
-                    boundary = GetTextType(body, "boundary=\"", "\"").Replace("\"", "");
+                    String boundary = GetTextType(body, "boundary=\"", "\"").Replace("\"", "");
                     start = body.IndexOf("--" + boundary + "\r\n");
                     if (start == -1)
                         return;
@@ -329,16 +325,14 @@ namespace CDEmail
                     }
                     break;
                 case "text/html;":
+                    break;
                 case "text/plain;":
-                    transfer = GetTextType(body, "Content-Transfer-Encoding: ", "\r\n").Trim();
+                    String transfer = GetTextType(body, "Content-Transfer-Encoding: ", "\r\n").Trim();
                     start = body.IndexOf("\r\n\r\n");
                     if (start != -1)
                         content = body.Substring(start, body.Length - start);
                     switch (transfer)
                     {
-                        case "8bit":
-
-                            break;
                         case "quoted-printable":
                             content = Tools.DecodeQuotedPrintable(content, encoding);
                             break;
@@ -538,8 +532,27 @@ namespace CDEmail
         #region 按钮  删除
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            WarningMessage("正在研发");
-
+            if(CheckMessage("确认删除邮件吗？", "删除确认框"))
+            {
+                try
+                {
+                    order = "dele " + mailmsg.MailInfo.Num.ToString() + "\r\n";
+                    if (SendOrder(order))
+                    {
+                        PrintRecv(recv = sr.ReadLine());
+                        if (recv.Substring(0, 4) == "-ERR")
+                        {
+                            WarningMessage("删除有错误，请稍后重试");
+                            return;
+                        }
+                        baseform.ShowReceiveList();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    PrintRecv(ex.Message);
+                }
+            }
         }
         #endregion
 
@@ -647,7 +660,7 @@ namespace CDEmail
             }
             else
             {
-                PrintRecv(enlousure);
+                // PrintRecv(enlousure);
 
                 int start, end;
                 String content_type = "";
@@ -670,6 +683,10 @@ namespace CDEmail
                     }
                     path = dialog.SelectedPath;
                 }
+                else
+                {
+                    return;
+                }
 
                 start = enlousure.IndexOf("--" + boundary) + boundary.Length + 2;
                 while((end = enlousure.IndexOf("--" + boundary, start)) != -1)
@@ -681,13 +698,11 @@ namespace CDEmail
                 for (int i = 0; i < enlousures.Count; i++)
                 {
                     tmp = ((String)enlousures[i]).Trim();
-                    PrintRecv(i.ToString() + "\r\n" + tmp);
                     content_type = GetTextType(tmp, "Content-Type:", "\r\n").Replace(";", "").Trim();
                     filename = GetTextType(tmp, "filename=\"", "\"").Replace("\"", "").Trim();
                     content_transfer = GetTextType(tmp, "Content-Transfer-Encoding:", "\r\n").Trim();
 
                     tmp = tmp.Substring(tmp.IndexOf("filename=\"" + filename + "\"") + ("filename=\"" + filename + "\"").Length).Trim();
-                    PrintRecv(i.ToString() + "\r\n" + tmp);
                     filebytes = Convert.FromBase64String(tmp.Trim());
 
                     if (!Directory.Exists(path))
@@ -696,19 +711,6 @@ namespace CDEmail
                     stream = new FileStream(path + "\\" + filename, FileMode.OpenOrCreate, FileAccess.Write);
                     stream.Write(filebytes, 0, filebytes.Length);
                     stream.Close();
-
-                    if (content_type.IndexOf("application/") == 0)
-                    {
-
-                    }
-                    else if (content_type.IndexOf("image/") == 0)
-                    {
-
-                    }
-                    else if (content_type.IndexOf("text/") == 0)
-                    {
-
-                    }
                 }
                 WarningMessage("下载完成");
             }

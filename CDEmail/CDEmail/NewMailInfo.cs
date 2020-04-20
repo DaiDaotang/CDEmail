@@ -13,12 +13,10 @@ namespace CDEmail
         {
             get;
         }
-
         public String Uid
         {
             get;
         }
-
         public MailAddress From
         {
             get;set;

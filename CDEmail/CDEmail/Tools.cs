@@ -9,7 +9,7 @@ namespace CDEmail
 {
     class Tools
     {
-        #region 转换文字里的字符集
+        #region 转换文字里的字符集，如GBK译为中文
         /// <summary>
         /// 转换文字里的字符集
         /// </summary>

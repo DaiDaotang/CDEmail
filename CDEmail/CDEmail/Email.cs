@@ -221,6 +221,7 @@ namespace CDEmail
                     receive.ShowMailMessage();
 
                     this.ShowForm(pnlCenter, receive);
+
                     formSwitchFlag = false;
                 }
                 else
@@ -230,7 +231,7 @@ namespace CDEmail
             }
             catch (System.Exception ex)
             {
-                //
+                Console.WriteLine(ex.StackTrace);
             }
             finally
             {
@@ -259,7 +260,7 @@ namespace CDEmail
             }
             catch (System.Exception ex)
             {
-                //
+                Console.WriteLine(ex.StackTrace);
             }
             finally
             {
